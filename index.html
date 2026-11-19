@@ -13,13 +13,13 @@
 :root{color-scheme:light dark;--bg:light-dark(#e6e4df,#101215);--card:light-dark(#fff,#1a1d22);--ink:light-dark(#15171a,#eceef1);--mut:light-dark(#5a5f67,#98a0aa);--line:light-dark(#d6d3cc,#2b2f37);--acc:#f2c200;--accInk:#1a1600;--ok:#1f9a4c;--bad:#d23b2b}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Barlow,system-ui,sans-serif;overflow-x:clip}
-h1,h2,h3{font-family:"Barlow Condensed",Barlow,sans-serif;line-height:1.05;margin:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,"Segoe UI",Roboto,Arial,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:"Arial Narrow",system-ui,sans-serif;line-height:1.05;margin:0}
 h1{font-size:clamp(26px,5.5vw,38px)}h2{font-size:24px}h3{font-size:19px;margin-bottom:6px}
 header{padding:12px max(3vw,12px) 4px;display:flex;gap:10px;align-items:end;justify-content:space-between;flex-wrap:wrap}header p{margin:2px 0 0;color:var(--mut);font-size:14px}
 nav{display:flex;gap:6px;overflow-x:auto;padding:6px max(3vw,12px) 8px}nav button{flex:none}
 main{padding:0 max(3vw,12px) 90px;max-width:1400px;margin:0 auto}
-button,select{font:600 15px Barlow,sans-serif;min-height:42px;padding:7px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button,select{font:600 15px system-ui,sans-serif;min-height:42px;padding:7px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
 select{width:100%}
 button:focus-visible,select:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 button.on{background:var(--acc);color:var(--accInk);border-color:var(--acc)}
@@ -40,7 +40,7 @@ button.red.on{background:var(--bad);border-color:var(--bad);color:#fff}
 @media(max-width:1000px){.grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 @media(max-width:640px){.grid{grid-template-columns:minmax(0,1fr)}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:12px}
-.grp{margin-bottom:9px}.grp b{display:block;font:700 14px "Barlow Condensed";color:var(--mut);margin-bottom:3px}
+.grp{margin-bottom:9px}.grp b{display:block;font:700 14px "Barlow Condensed","Arial Narrow",system-ui,sans-serif;color:var(--mut);margin-bottom:3px}
 .row{display:flex;flex-wrap:wrap;gap:5px}
 .seg{display:flex}.seg button{border-radius:0;flex:1;padding:7px 6px}.seg button:first-child{border-radius:10px 0 0 10px}.seg button:last-child{border-radius:0 10px 10px 0}
 .meter{background:#e8b800;border-radius:18px;padding:12px;color:#1a1600;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15);margin-bottom:12px}
@@ -68,16 +68,17 @@ button.red.on{background:var(--bad);border-color:var(--bad);color:#fff}
 .qopt.right{background:color-mix(in srgb,var(--ok) 22%,var(--card));border-color:var(--ok)}
 .qopt.wrong{background:color-mix(in srgb,var(--bad) 18%,var(--card));border-color:var(--bad)}
 .bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--acc)}
-table{border-collapse:collapse;width:100%;font-size:15px}td,th{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}th{font-family:"Barlow Condensed";font-size:17px}
-.tag{display:inline-block;font:700 15px "Barlow Condensed";background:var(--acc);color:var(--accInk);border-radius:6px;padding:1px 7px;white-space:nowrap}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}th{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;font-size:17px}
+.tag{display:inline-block;font:700 15px "Barlow Condensed","Arial Narrow",system-ui,sans-serif;background:var(--acc);color:var(--accInk);border-radius:6px;padding:1px 7px;white-space:nowrap}
 .fault{border:2px solid var(--bad)}
+@media(max-width:600px){.stack thead{display:none}.stack tr{display:grid;padding:6px 0;border-bottom:1px solid var(--line)}.stack td{border:0;padding:1px 0;font-size:14px}.stack td[data-l]::before{content:attr(data-l) ': ';color:var(--mut)}.stack td:empty{display:none}}
 @keyframes pulse{50%{opacity:.25}}.pulse{animation:pulse .9s infinite}
 @media(prefers-reduced-motion:reduce){.pulse{animation:none}}
 </style>
 </head>
 <body>
 <header><div><h1>Kfz-Lernwand digital</h1><p>Virtueller Kfz-Elektrik-Laborstand: stecken, schalten, messen, Fehler finden.</p></div></header>
-<nav id="tabs"><button data-tab="wand" class="on">Lernwand</button><button data-tab="fehler">Fehlersuche</button><button data-tab="quiz">Quiz</button><button data-tab="wissen">Wissen</button></nav>
+<nav id="tabs"><button data-tab="wand" class="on">Lernwand</button><button data-tab="fehler">Fehlersuche</button><button data-tab="aufg">Aufgaben</button><button data-tab="quiz">Quiz</button><button data-tab="wissen">Wissen</button></nav>
 <main>
 <section id="v-wand">
  <div id="faultCard" class="card fault hidden"></div>
@@ -101,7 +102,9 @@ table{border-collapse:collapse;width:100%;font-size:15px}td,th{border-bottom:1px
   <div class="card" id="ctrl"></div>
   <div class="card" id="side"></div>
  </div>
+ <div class="card" id="logCard"></div>
 </section>
+<section id="v-aufg" class="hidden" style="max-width:860px"></section>
 <section id="v-quiz" class="hidden" style="max-width:720px"></section>
 <section id="v-wissen" class="hidden" style="max-width:860px">
  <div class="card"><h3>So arbeitest du an der Wand</h3><ol>
@@ -412,8 +415,9 @@ let st=fresh();
 const U={tab:'wand',ex:store.get('ex',0),mode:'plug',color:'black',pend:null,mm:'gnd',pr:null,pb:null,cabs:[],hist:[],cnt:1,lock:null,fault:null,fmsg:null,meas:0,guess:0,solved:false,hl:null,msg:'',phase:0,fl:false,t:0,last:null,lastSig:'',checkMsg:null,status:''};
 if(U.ex>=EX.length)U.ex=0;
 let R=null;
-function cab(){return U.tab==='fehler'?U.fcab:U.cabs}
-function curF(){return U.tab==='fehler'?U.fault:U.lock?U.lock.f:null}
+function cab(){return U.tab==='wand'?U.cabs:U.fcab}
+const fixed=()=>U.tab!=='wand';
+function curF(){return U.tab==='fehler'?U.fault:U.tab==='mess'?null:U.lock?U.lock.f:null}
 function loadEx(){U.cabs=store.get('cab.'+EX[U.ex].id,[]);U.cnt=U.cabs.reduce((m,c)=>Math.max(m,+String(c.id).replace(/\D/g,'')||0),0)+1;U.hist=[];U.pend=null;U.checkMsg=null;U.hl=null}
 function save(){if(U.tab==='wand')store.set('cab.'+EX[U.ex].id,U.cabs)}
 function resim(){R=simulate(st,cab(),curF(),U.fl);st.blown=R.blown;if(R.trip&&!st.trip){st.trip=true;U.status='Netzteil hat abgeschaltet (Überlast/Kurzschluss). Fehler beheben, dann RESET am Netzteil.'}st.rel={...R.rel}}
@@ -559,8 +563,8 @@ function drawDyn(){
  // Schloss aktiv
  if(U.lock){const m=MOD[U.lock.mod];const L_={XL:[575,112],XR:[65,112],KI:[200,200],CF:[115,180]}[U.lock.mod];s+=`<circle cx="${m.x+L_[0]+20}" cy="${m.y+L_[1]-20}" r="6" fill="#d23b2b"/>`}
  // Kabel
- for(const c of cab()){const p=cablePath(c.a,c.b),col=CCOL[c.c]||'#1a1a1a',hl=U.hl&&U.hl.cab===c.id;
-  s+=`<path d="${p}" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="7" stroke-linecap="round" pointer-events="none"/><path d="${p}" fill="none" stroke="${col}" stroke-width="4.5" stroke-linecap="round" pointer-events="none" ${hl?'class="pulse"':''}/><path d="${p}" fill="none" stroke="transparent" stroke-width="16" data-w="${c.id}"/>`;
+ for(const c of cab()){const p=cablePath(c.a,c.b),col=CCOL[c.c]||'#1a1a1a',hl=U.hl&&(U.hl.cab===c.id||(U.hl.cabs||[]).includes(c.id));
+  s+=`<path d="${p}" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="7" stroke-linecap="round" pointer-events="none"/><path d="${p}" fill="none" stroke="${col}" stroke-width="4.5" stroke-linecap="round" pointer-events="none"/>${hl?`<path d="${p}" fill="none" stroke="#ff2d2d" stroke-width="9" stroke-linecap="round" opacity=".8" class="pulse" pointer-events="none"/>`:''}<path d="${p}" fill="none" stroke="transparent" stroke-width="16" data-w="${c.id}"/>`;
   for(const e of[c.a,c.b]){const S_=SOCK[e];s+=`<circle cx="${S_.X}" cy="${S_.Y}" r="7.5" fill="${col}" stroke="#000" stroke-width="1.2" pointer-events="none"/>`}}
  if(U.pend){const S_=SOCK[U.pend];s+=`<circle cx="${S_.X}" cy="${S_.Y}" r="15" fill="none" stroke="#f2c200" stroke-width="5" class="pulse" pointer-events="none"/>`}
  if(U.hl&&U.hl.socks)for(const id of U.hl.socks){const S_=SOCK[id];s+=`<circle cx="${S_.X}" cy="${S_.Y}" r="20" fill="none" stroke="#2e9e4f" stroke-width="6" class="pulse" pointer-events="none"/>`}
@@ -577,7 +581,7 @@ function goMod(id){const m=MOD[id],r=svg.getBoundingClientRect(),ar=r.width/r.he
 function focusSocks(ids){const ss=ids.map(i=>SOCK[i]);const x0=Math.min(...ss.map(s=>s.X))-120,x1=Math.max(...ss.map(s=>s.X))+120,y0=Math.min(...ss.map(s=>s.Y))-120,y1=Math.max(...ss.map(s=>s.Y))+160;const r=svg.getBoundingClientRect(),ar=r.width/r.height;let w=x1-x0,h=y1-y0;if(w/h<ar)w=h*ar;else h=w/ar;VB={x:(x0+x1)/2-w/2,y:(y0+y1)/2-h/2,w,h};setVB()}
 const ptrs=new Map();let pan=null,pinch=null;
 svg.addEventListener('pointerdown',e=>{svg.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
- if(ptrs.size===1){const t=e.target.closest('[data-s],[data-w],[data-c],[data-p]');pan={x:e.clientX,y:e.clientY,vb:{...VB},moved:false,t:t?{...t.dataset}:null}}
+ if(ptrs.size===1){let t=null;for(const el of document.elementsFromPoint(e.clientX,e.clientY)){const x=el.closest&&el.closest('[data-s]');if(x){t=x;break}}if(!t)t=e.target.closest('[data-s],[data-w],[data-c],[data-p]');pan={x:e.clientX,y:e.clientY,vb:{...VB},moved:false,t:t?{...t.dataset}:null}}
  else if(ptrs.size===2){const[a,b]=[...ptrs.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y),vb:{...VB},cx:(a.x+b.x)/2,cy:(a.y+b.y)/2};if(pan)pan.moved=true}});
 svg.addEventListener('pointermove',e=>{if(!ptrs.has(e.pointerId))return;ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});const r=svg.getBoundingClientRect();
  if(pinch&&ptrs.size===2){const[a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);VB={...pinch.vb};zoomAt(pinch.d/d,pinch.cx,pinch.cy);return}
@@ -593,12 +597,12 @@ function tap(d){
  if(d.c){control(d.c);return}
  if(U.mode==='report'){const p=d.p||(d.w?'cab:'+d.w:null)||(d.s?'sock:'+d.s:null);report(p);return}
  if(d.s){const id=d.s;
-  if(U.mode==='plug'){if(U.tab==='fehler'){U.status='In der Fehlersuche ist die Verdrahtung fest – nur messen und bedienen.';refresh();return}
-   if(!U.pend)U.pend=id;else if(U.pend===id)U.pend=null;else{const c={id:'c'+(U.cnt++),a:U.pend,b:id,c:U.color};U.cabs.push(c);U.hist.push(['add',c]);U.pend=null;save();U.checkMsg=null}
+  if(U.mode==='plug'){if(fixed()){U.status='Hier ist die Verdrahtung fest – nur messen und bedienen.';refresh();return}
+   if(!U.pend)U.pend=id;else if(U.pend===id)U.pend=null;else{const c={id:'c'+(U.cnt++),a:U.pend,b:id,c:U.color};U.cabs.push(c);U.hist.push(['add',c]);U.pend=null;save();U.checkMsg=null;const j=U.learn?judge(c):null;addLog('Gesteckt',sn(c.a),sn(c.b),j?j.v:'',j?(j.ok===true?'ok':j.ok===false?'bad':''):'');learnShow(c,j)}
    U.hl=null;full();return}
-  if(U.mode==='meas'){if(U.mm==='gnd')U.pr=id;else{if(!U.pr||U.pb){U.pr=id;U.pb=null}else U.pb=id}if(U.tab==='fehler')U.meas++;refresh();return}
+  if(U.mode==='meas'){if(U.mm==='gnd')U.pr=id;else{if(!U.pr||U.pb){U.pr=id;U.pb=null}else U.pb=id}if(U.tab==='fehler')U.meas++;refresh();if(U.mm==='gnd'||U.pb)addLog('Gemessen',sn(U.pr),U.mm==='gnd'?'Masse':sn(U.pb),fmt(R.v(U.pr)-(U.mm==='gnd'?0:R.v(U.pb)))+' V');return}
   if(U.mode==='info'){info('sock',id);return}}
- if(d.w){if(U.mode==='plug'&&U.tab==='wand'){const i=U.cabs.findIndex(c=>c.id===d.w);if(i>=0){U.hist.push(['del',U.cabs[i]]);U.cabs.splice(i,1);save();U.checkMsg=null;full()}return}
+ if(d.w){if(U.mode==='plug'&&U.tab==='wand'){const i=U.cabs.findIndex(c=>c.id===d.w);if(i>=0){const c=U.cabs[i];U.hist.push(['del',c]);U.cabs.splice(i,1);save();U.checkMsg=null;addLog('Gelöscht',sn(c.a),sn(c.b),'Kabel abgezogen');full()}return}
   if(U.mode==='info'){const c=cab().find(c=>c.id===d.w);if(c)info('cab',c);return}}
  if(d.p&&U.mode==='info'){info('part',d.p);return}
 }
@@ -611,10 +615,11 @@ function control(c){
  else if(k==='nt')st.nt=!st.nt;else if(k==='reset'){st.trip=false;U.status='Netzteil zurückgesetzt.'}else if(k==='baud')st.baud=st.baud?0:1;
  else if(k==='fuse'){if(st.blown[a]){delete st.blown[a];U.status=`Sicherung ${a.split('.')[1]} ersetzt.`}else if(U.mode==='info'){info('fuse',a);return}else U.status=`Sicherung ${a.split('.')[1]} (10 A) ist in Ordnung.`}
  else if(k==='lock'){lockTap(a);return}
+ {const m={key:a==='ZS'?'key':'key2'}[k]||k;if(k==='key')logCtl(a==='ZS'?'key':'key2',a==='ZS'?st.key:st.key2);else if(st[m]!==undefined&&CTL[m])logCtl(m,st[m]);else if(k==='fuse')addLog('Sicherung','',a.split('.')[1],'ersetzt bzw. geprüft');else if(k==='reset')addLog('Geschaltet','','','Netzteil RESET');else if(/^l[fr][+-]$/.test(k))logCtl(k.slice(0,2),st[k.slice(0,2)])}
  full();
 }
 function lockTap(mod){
- if(U.tab==='fehler'){U.status='Der Fehlersimulator wird in der Fehlersuche automatisch gesetzt.';refresh();return}
+ if(fixed()){U.status='Der Fehlersimulator ist hier nicht verfügbar.';refresh();return}
  if(U.lock&&U.lock.mod===mod){U.status=`Fehlersimulator ${MOD[mod].name}: „${U.lock.f.t}“ – jetzt wieder aus.`;U.lock=null}
  else{const list=LOCKF[mod];const i=list[Math.floor(Math.random()*list.length)];const f=i>=100?CANF[i-100]:FAULTS[i];U.lock={mod,f};U.status=`Fehlersimulator ${MOD[mod].name} eingeschaltet – ein Fehler ist versteckt. Schloss erneut antippen = Auflösung.`}
  full();
@@ -656,25 +661,64 @@ function drawSide(){let h='';
   if(ex.sol.length)h+=`<div class="prog"><i style="width:${d/ex.sol.length*100}%"></i></div><p class="mut" style="margin:0">${d} von ${ex.sol.length} Verbindungen der Musterlösung gesteckt (andere richtige Wege zählen beim Prüfen auch).</p>`;
   h+=`<div class="row" style="margin-top:8px">${ex.tests.length?'<button class="pri" data-act="check">Funktion prüfen</button>':''}<button data-act="undo">Rückgängig</button><button data-act="clear">Alles abstecken</button></div>`;
   if(U.checkMsg)h+=`<div class="msg ${U.checkMsg[0]}">${U.checkMsg[1]}</div>`;
-  h+=`<p class="mut" style="margin-top:8px">Hilfe brauchst du? Tipp auf die gelbe Lampe unten rechts.</p>`}
- else{h=`<h3>Fehlersuche</h3><p class="mut" style="margin:0">Die Wand ist komplett verdrahtet (Licht, Blinker, Bremse, TFL, LWR). Ein Fehler ist versteckt – im Bauteil oder in einem Kabel. Funktion prüfen, messen, dann „Fehler melden“ und das defekte Teil (Lampe, Schalter, Relais, Masse-Schiene, Kabel) antippen.</p>
+  h+=`<div class="row" style="margin-top:8px"><button data-act="learn" class="${U.learn?'on':''}">Lernmodus ${U.learn?'an':'aus'}</button></div><p class="mut" style="margin-top:6px">Lernmodus: Bei jedem Kabel siehst du sofort, ob es richtig ist, und was die Buchsen machen. Hilfe gibt’s über die gelbe Lampe unten rechts.</p>`}
+ else if(U.tab==='fehler'){h=`<h3>Fehlersuche</h3><p class="mut" style="margin:0">Die Wand ist komplett verdrahtet (Licht, Blinker, Bremse, TFL, LWR). Ein Fehler ist versteckt – im Bauteil oder in einem Kabel. Funktion prüfen, messen, dann „Fehler melden“ und das defekte Teil (Lampe, Schalter, Relais, Masse-Schiene, Kabel) antippen.</p>
   <div class="row" style="margin-top:8px">${U.solved?'':'<button data-act="giveup">Lösung zeigen</button>'}<button class="pri" data-act="newfault">Neuer Fehler</button></div><p class="mut">Messungen: ${U.meas} · Fehlversuche: ${U.guess}</p>${U.fmsg?`<div class="msg ${U.fmsg[0]}">${U.fmsg[1]}</div>`:''}`}
+ else{const m=U.mtask;h=`<h3>Messaufgabe</h3><p style="margin:0 0 6px">Stell die Schalter wie angegeben (Bedienfeld), miss mit dem Multimeter${m.b?' im Modus „2 Punkte“':''} und gib den Wert ein.</p><div class="row"><input id="min" inputmode="decimal" placeholder="Messwert" style="font:600 18px system-ui,sans-serif;min-height:44px;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:140px"><span style="align-self:center;font-weight:700">V</span><button class="pri" data-act="mcheck">Prüfen</button></div>${m.res?`<div class="msg ${m.res[0]}">${m.res[1]}</div>`:''}<div class="row" style="margin-top:8px"><button data-act="mnew">Neue Messaufgabe</button><button data-act="maufg">Zurück zu Aufgaben</button></div>`}
  $('side').innerHTML=h;
- const fc=$('faultCard');fc.classList.toggle('hidden',U.tab!=='fehler');if(U.tab==='fehler')fc.innerHTML=`<h3>Beanstandung</h3><ul style="margin:0">${U.sym.map(s=>`<li>${s}</li>`).join('')}</ul>`;
- $('repBtn').classList.toggle('hidden',U.tab!=='fehler');document.querySelector('[data-mode="plug"]').classList.toggle('hidden',U.tab==='fehler');
+ const fc=$('faultCard');fc.classList.toggle('hidden',U.tab==='wand');if(U.tab==='fehler')fc.innerHTML=`<h3>Beanstandung</h3><ul style="margin:0">${U.sym.map(s=>`<li>${s}</li>`).join('')}</ul>`;if(U.tab==='mess')fc.innerHTML=`<h3>Messauftrag</h3><p style="margin:0">Miss ${U.mtask.t}.</p>`;fc.style.borderColor=U.tab==='mess'?'var(--acc)':'';
+ $('repBtn').classList.toggle('hidden',U.tab!=='fehler');document.querySelector('[data-mode="plug"]').classList.toggle('hidden',fixed());
 }
 function drawColors(){$('colors').innerHTML=U.mode==='plug'&&U.tab==='wand'?Object.entries(CCOL).map(([k,c])=>`<button class="cl ${U.color===k?'on':''}" style="background:${c}" data-col="${k}" aria-label="${k}"></button>`).join(''):'';document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===U.mode))}
 function refresh(){resim();drawDyn();drawMeter();if(U.status){U.stMsg=U.status;U.stT=Date.now()}const useMsg=U.stMsg&&Date.now()-U.stT<5000;$('status').textContent=useMsg?U.stMsg:({plug:U.pend?'Jetzt die zweite Buchse antippen.':'Stecken: zwei Buchsen nacheinander antippen. Kabel antippen = abziehen.',meas:'Messen: Buchse antippen.',info:'Info: Buchse, Bauteil oder Platte antippen.',report:'Fehler melden: defektes Bauteil oder Kabel antippen.'})[U.mode];U.status=''}
-function full(){refresh();drawCtrl();drawSide();drawColors();if(!$('sheet').classList.contains('hidden'))drawHelp()}
+function full(){refresh();drawCtrl();drawSide();drawColors();drawLog();if(!$('sheet').classList.contains('hidden'))drawHelp()}
 
 // =============== PRÜFEN ===============
 function check(){const ex=EX[U.ex];const errs=[];
  for(const[c,fn]of ex.tests){const r=evalCtrl(c,U.cabs,null);if(r.trip){errs.push('Kurzschluss – das Netzteil schaltet ab!');break}const bl=Object.keys(r.blown).filter(k=>r.blown[k]);if(bl.length){errs.push(`Sicherung ${bl.map(b=>b.split('.')[1]).join(', ')} löst aus – Kurzschluss?`);break}
   const e=fn(r);if(e.length){const ctl=Object.entries(c).map(([k,v])=>({key:'Zündung '+v,key2:'Zündung (CAN) '+v,ls:'Licht '+['0','Stand','Abblend'][v],fern:'Fernlicht',lever:v<0?'Blinker links':'Blinker rechts',warn:'Warnblinker',brake:'Bremse',lr:'Beladung hinten '+v})[k]).join(', ');errs.push(`Bei <b>${ctl}</b>: ${e.join('; ')}`)}}
  if(!errs.length&&ex.fused){const fb={};for(let i=1;i<=10;i++)fb['ZS.Z'+i]=true;for(let i=1;i<=6;i++)fb['SE.F'+i]=true;const st2={...C0,...ex.tests[0][0],nt:true,trip:false,blown:fb,rel:{}};const r=simulate(st2,U.cabs,null,true);const still=ex.fused.filter(i=>r.br[i]>0.1);if(still.length)errs.push(`${still.map(i=>LAMP[i].name).join(', ')} hängt ohne Sicherung am Plus. Jeder Verbraucher muss abgesichert sein!`)}
- if(errs.length)U.checkMsg=['bad',errs.slice(0,4).join('<br>')];else{U.checkMsg=['ok','Alles richtig! Die Schaltung funktioniert in allen geprüften Stellungen. Jetzt nachmessen: Spannung vor und hinter Sicherung, Schalter und Lampe.'];store.set('done.'+ex.id,true)}
+ if(!errs.length&&ex.fuseCheck){const fc=ex.fuseCheck;const r=simulate({...C0,...fc.ctrl,nt:true,trip:false,blown:{[fc.fuse]:true},rel:{}},U.cabs,null,true);const still=fc.lamps.filter(i=>r.br[i]>0.1);if(still.length)errs.push(`Funktioniert – aber ${still.map(i=>LAMP[i].name).join(', ')} läuft nicht über die vorgegebene Sicherung ${fc.fuse.split('.')[1]}.`)}
+ addLog('Geprüft','','',errs.length?errs[0].replace(/<[^>]+>/g,''):'Alles richtig',errs.length?'bad':'ok');
+ if(errs.length){const d=diagnose(ex);U.checkMsg=['bad',errs.slice(0,4).join('<br>')+(d.html?`<hr style="border:0;border-top:1px solid var(--line);margin:8px 0"><b>Was du falsch gemacht hast:</b>${d.html}`:'')];U.hl=d.hl}else{U.checkMsg=['ok','Alles richtig! Die Schaltung funktioniert in allen geprüften Stellungen. Jetzt nachmessen: Spannung vor und hinter Sicherung, Schalter und Lampe.'];store.set('done.'+ex.id,true)}
  full()}
 
+
+function diagnose(ex){const out=[],hl={cabs:[],socks:[]};if(!ex.sol.length)return{html:'',hl:null};
+ const su=UF();for(const[a,b]of STATIC)su.u(a,b);for(const m of MODS)for(const[a,b]of RAILS(m))su.u(a,b);su.u('ZS.T4','ZS.O15');su.u('ZS2.T4','ZS2.O15');for(const[a,b]of ex.sol)su.u(a,b);
+ const used=new Set(ex.sol.flat());const uu=connectedSet();const nm=id=>`${SOCK[id].n} <span class="mut">(${MOD[SOCK[id].m].name})</span>`;
+ const g=su.f('GND'),p30=su.f('R30');
+ for(const c of U.cabs){const A_=su.f(c.a),B_=su.f(c.b);
+  if((A_===p30&&B_===g)||(A_===g&&B_===p30)){out.push(`<li><b>Kurzschluss:</b> ${nm(c.a)} ↔ ${nm(c.b)} verbindet Plus direkt mit Masse.</li>`);hl.cabs.push(c.id);continue}
+  if(A_!==B_&&(used.has(c.a)||used.has(c.b)||A_===g||B_===g||A_===p30||B_===p30)){out.push(`<li><b>Falsches Kabel:</b> ${nm(c.a)} ↔ ${nm(c.b)} – diese beiden Buchsen gehören nicht zusammen.</li>`);hl.cabs.push(c.id)}}
+ const miss=ex.sol.filter(([a,b])=>uu.f(a)!==uu.f(b));
+ for(const[a,b]of miss.slice(0,4)){const isG=su.f(b)===g||su.f(a)===g;out.push(`<li><b>Fehlt:</b> ${nm(a)} → ${nm(b)}${isG?' (Masse!)':''}</li>`)}
+ if(miss.length>4)out.push(`<li class="mut">… und ${miss.length-4} weitere fehlende Verbindungen.</li>`);
+ if(miss.length)hl.socks=[miss[0][0],miss[0][1]];
+ if(!out.length)return{html:'<p class="mut" style="margin:4px 0 0">Die Kabel sehen wie die Musterlösung aus – prüfe Netzteil, Zündung und ausgelöste Sicherungen.</p>',hl:null};
+ return{html:`<ul style="margin:4px 0 0;padding-left:18px">${out.slice(0,7).join('')}</ul><p class="mut" style="margin:4px 0 0">Falsche Kabel blinken rot an der Wand, die erste fehlende Verbindung grün.</p>`,hl}}
+
+// =============== LERNMODUS & PROTOKOLL ===============
+const SHORT={XL:'Scheinwerfer L',KI:'Kombi',XR:'Scheinwerfer R',ZS:'Zündstart',SE:'Schaltereinheit',LV:'LWR',RL:'Rückleuchte L',NT:'Netzteil',RR:'Rückleuchte R',RE:'Relais',ZS2:'Zündstart 2',CS:'CAN-Schalt',CB:'CAN-Licht',CF:'CAN-Fehlersim.'};
+const sn=id=>id&&SOCK[id]?`${SOCK[id].n} · ${SHORT[SOCK[id].m]}`:'';
+function solUF(ex){const su=UF();for(const[a,b]of STATIC)su.u(a,b);for(const m of MODS)for(const[a,b]of RAILS(m))su.u(a,b);su.u('ZS.T4','ZS.O15');su.u('ZS2.T4','ZS2.O15');for(const[a,b]of ex.sol)su.u(a,b);return su}
+function judge(c){const ex=EX[U.ex];if(!ex.sol.length)return null;const su=solUF(ex),used=new Set(ex.sol.flat());const g=su.f('GND'),p=su.f('R30');
+ const A_=su.f(c.a),B_=su.f(c.b);if((A_===p&&B_===g)||(A_===g&&B_===p))return{ok:false,v:'Kurzschluss!',t:'Dieses Kabel verbindet Plus (30) direkt mit Masse (31). Das Netzteil schaltet ab bzw. die Sicherung löst aus.'};
+ if(A_===B_)return{ok:true,v:'Richtig',t:'Diese Verbindung gehört zur Lösung.'};
+ if(!used.has(c.a)&&!used.has(c.b)&&A_!==g&&B_!==g&&A_!==p&&B_!==p)return{ok:null,v:'Nicht nötig',t:'Diese Buchsen werden für diese Aufgabe nicht gebraucht.'};
+ return{ok:false,v:'Falsch',t:'Diese beiden Buchsen gehören in dieser Aufgabe nicht zusammen.'}}
+function learnShow(c,j){const A_=SOCK[c.a],B_=SOCK[c.b];const col=j?(j.ok===true?'ok':j.ok===false?'bad':'info'):'info';
+ $('infoCard').innerHTML=`<h3>Erklärung</h3>${j?`<div class="msg ${col}" style="margin:0 0 8px"><b>${j.v}:</b> ${j.t}</div>`:''}<p style="margin:0"><b>${esc(A_.n)}</b> <span class="mut">(${SHORT[A_.m]})</span><br><span class="mut">${esc(A_.d)}</span></p><p style="margin:8px 0 0"><b>${esc(B_.n)}</b> <span class="mut">(${SHORT[B_.m]})</span><br><span class="mut">${esc(B_.d)}</span></p>`}
+const logKey=()=>U.tab==='wand'?'log.'+EX[U.ex].id:'log.'+U.tab;
+function addLog(typ,von,nach,info,bew){const L=store.get(logKey(),[]);L.push({n:L.length?L[L.length-1].n+1:1,t:new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),typ,von:von||'',nach:nach||'',info:info||'',bew:bew||''});store.set(logKey(),L.slice(-400));drawLog()}
+function drawLog(){const L=store.get(logKey(),[]);const title=U.tab==='wand'?EX[U.ex].t:U.tab==='fehler'?'Fehlersuche':U.tab==='mess'?'Messaufgaben':'';
+ const cnt=t=>L.filter(x=>x.typ===t).length;
+ $('logCard').innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><h3 style="margin:0">Protokoll – ${esc(title)}</h3><div class="row"><button data-act="logcopy">Kopieren</button><button data-act="logclear">Leeren</button></div></div>
+ <p class="mut" style="margin:4px 0 8px">${L.length} Einträge · gesteckt ${cnt('Gesteckt')} · gelöscht ${cnt('Gelöscht')} · geschaltet ${cnt('Geschaltet')} · gemessen ${cnt('Gemessen')} · geprüft ${cnt('Geprüft')}</p>
+ ${L.length?`<div class="scroll" style="max-height:360px;overflow:auto"><table class="stack"><thead><tr><th>Nr · Zeit</th><th style="display:none"></th><th>Aktion</th><th>Von</th><th>Nach</th><th>Ergebnis</th></tr></thead><tbody>${L.slice().reverse().map(x=>`<tr><td data-l="Nr">${x.n} · ${x.t}</td><td style="display:none"></td><td data-l="Aktion"><b style="color:${x.typ==='Gelöscht'||x.typ==='Rückgängig'?'var(--bad)':x.typ==='Gesteckt'?'var(--ok)':'inherit'}">${x.typ}</b></td><td data-l="Von">${esc(x.von)}</td><td data-l="Nach">${esc(x.nach)}</td><td data-l="Ergebnis">${x.bew==='ok'?'✓ ':x.bew==='bad'?'✗ ':''}${esc(x.info)}</td></tr>`).join('')}</tbody></table></div>`:'<p class="mut" style="margin:0">Noch keine Schritte. Alles, was du steckst, löschst, schaltest, misst und prüfst, wird hier aufgezeichnet.</p>'}`}
+const CTL={key:v=>`Zündschlüssel Stellung ${v}`,key2:v=>`Zündschlüssel (CAN) Stellung ${v}`,ls:v=>`Lichtschalter ${['0','Standlicht','Abblendlicht'][v]}`,nebel:v=>`Nebel ${v||'aus'}`,lever:v=>`Blinkerhebel ${v<0?'links':v>0?'rechts':'Mitte'}`,fern:v=>`Fernlicht ${v?'ein':'aus'}`,hupe:v=>`Lichthupe ${v?'ein':'aus'}`,warn:v=>`Warnblinker ${v?'ein':'aus'}`,brake:v=>`Bremse ${v?'getreten':'los'}`,s2:v=>`Taster S2 ${v?'gedrückt':'los'}`,s3:v=>`Taster S3 ${v?'gedrückt':'los'}`,nt:v=>`Netzteil ${v?'ein':'aus'}`,lwr:v=>`Leuchtweitenregler ${v}`,lf:v=>`Beladung vorne ${v}`,lr:v=>`Beladung hinten ${v}`};
+const logCtl=(k,v)=>{if(CTL[k])addLog('Geschaltet','','',CTL[k](v))};
+U.learn=store.get('learn',true);
 // =============== FEHLERSUCHE ===============
 function newFault(){st=fresh();U.fcab=toCab(MASTER);U.meas=0;U.guess=0;U.solved=false;U.fmsg=null;U.pr=null;U.pb=null;
  for(let t=0;t<40;t++){const base=FAULTS[Math.floor(Math.random()*FAULTS.length)];let f={...base};
@@ -682,6 +726,7 @@ function newFault(){st=fresh();U.fcab=toCab(MASTER);U.meas=0;U.guess=0;U.solved=
   const sym=symptoms(U.fcab,f);if(sym.length){U.fault=f;U.sym=sym;break}}
  U.mode='meas'}
 function report(p){if(!p||U.solved)return;const f=U.fault;
+ addLog('Fehler gemeldet',p.startsWith('cab:')?'Kabel':p.startsWith('sock:')?sn(p.slice(5)):(LAMP[p]?LAMP[p].name:p),'',f.p.includes(p)?'richtig':'falsch',f.p.includes(p)?'ok':'bad');
  if(f.p.includes(p)){U.solved=true;U.mode='meas';U.fmsg=['ok',`Richtig gefunden: ${f.t}. ${f.how} (${U.meas} Messungen)`]}
  else{U.guess++;U.fmsg=['bad','Das ist in Ordnung. Miss weiter – vergleiche vor und hinter dem Bauteil, Plus- und Masseseite.']}
  full()}
@@ -690,7 +735,7 @@ function report(p){if(!p||U.solved)return;const f=U.fault;
 function drawHelp(){const sh=$('sheet');let h=`<div style="display:flex;justify-content:space-between;align-items:center"><h2>Hilfe</h2><button data-act="closehelp">Schließen</button></div>`;
  if(U.tab==='wand'){const ex=EX[U.ex],pr=progress();
   h+=`<h3 style="margin-top:10px">${ex.t}</h3><p style="margin:0 0 6px">${ex.goal}</p>`;
-  if(ex.sol.length){h+=`<ol class="steps">${pr.map(p=>`<li class="${p.done?'d':''}">${esc(SOCK[p.a].n)} <span class="mut">(${MOD[SOCK[p.a].m].code})</span> → ${esc(SOCK[p.b].n)} <span class="mut">(${MOD[SOCK[p.b].m].code})</span></li>`).join('')}</ol>
+  if(ex.sol.length){h+=`<ol class="steps">${pr.map(p=>`<li class="${p.done?'d':''}"><b>${esc(SOCK[p.a].n)}</b> <span class="mut">(${SHORT[SOCK[p.a].m]})</span> → <b>${esc(SOCK[p.b].n)}</b> <span class="mut">(${SHORT[SOCK[p.b].m]})</span><br><span class="mut">Warum: ${esc(SOCK[p.b].d)}</span></li>`).join('')}</ol>
   <div class="row"><button class="pri" data-act="next">Nächste Verbindung zeigen</button><button data-act="solution">Musterlösung stecken</button></div>`}
   h+=`<h3 style="margin-top:14px">Wenn es nicht geht</h3><ul style="margin:0;font-size:15px"><li>Netzteil an? (grüne LED)</li><li>15-Schiene versorgt? → Übung 1, Zündschlüssel auf 2</li><li>Minus der Rückleuchten auf 31 gesteckt?</li><li>Blinkgeber K3: 31 auf Masse?</li><li>Sicherung ausgelöst? (schwarz mit rotem X) → antippen</li><li>Mit „Messen“ Schritt für Schritt vom Plus zur Lampe gehen.</li></ul>`}
  else h+=`<h3 style="margin-top:10px">Vorgehen bei der Fehlersuche</h3><ol style="font-size:15px"><li>Beanstandung nachstellen (Bedienfeld).</li><li>Gemeinsamkeiten suchen: Fällt eine Seite aus? Alles an 15? Nur ein Verbraucher?</li><li>Am Verbraucher messen: Plus-Eingang und Minus gegen Masse.</li><li>Rückwärts zum Plus messen: Sicherung, Schalter, Relais.</li><li>Kabel: an beiden Enden muss die gleiche Spannung sein.</li><li>Masse: unter Last Spannungsfall zwischen Lampen-Minus und 31 messen.</li></ol>`;
@@ -700,28 +745,33 @@ $('helpBtn').onclick=()=>{const sh=$('sheet');if(sh.classList.contains('hidden')
 
 // =============== BUTTONS ===============
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
- if(b.dataset.tab){U.tab=b.dataset.tab;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
-  $('v-wand').classList.toggle('hidden',!(U.tab==='wand'||U.tab==='fehler'));$('v-quiz').classList.toggle('hidden',U.tab!=='quiz');$('v-wissen').classList.toggle('hidden',U.tab!=='wissen');
+ if(b.dataset.tab){U.tab=b.dataset.tab;showView();
   if(U.tab==='fehler'){U.lock=null;if(!U.fault)newFault();U.mode='meas'}if(U.tab==='wand'){st=fresh();U.mode='plug';loadEx()}
-  if(U.tab==='quiz')renderQuiz();else if(U.tab!=='wissen')full();return}
+  if(U.tab==='quiz')renderQuiz();else if(U.tab==='aufg')renderAufg();else if(U.tab!=='wissen')full();return}
  if(b.dataset.mode){U.mode=b.dataset.mode;U.pend=null;full();return}
  if(b.dataset.col){U.color=b.dataset.col;drawColors();return}
- if(b.dataset.set){const k=b.dataset.set,v=b.dataset.v;st[k]=['key','key2','ls','nebel','lever'].includes(k)?+v:v;full();return}
- if(b.dataset.tog){st[b.dataset.tog]=!st[b.dataset.tog];full();return}
+ if(b.dataset.set){const k=b.dataset.set,v=b.dataset.v;st[k]=['key','key2','ls','nebel','lever'].includes(k)?+v:v;logCtl(k,st[k]);full();return}
+ if(b.dataset.tog){st[b.dataset.tog]=!st[b.dataset.tog];logCtl(b.dataset.tog,st[b.dataset.tog]);full();return}
  const a=b.dataset.act;if(!a)return;
  if(a==='reset'){st.trip=false}
- if(a==='start'){st.key=3;setTimeout(()=>{if(st.key===3){st.key=2;full()}},1500)}
+ if(a==='start'){st.key=3;addLog('Geschaltet','','','Zündschlüssel Stellung 3 (Start)');setTimeout(()=>{if(st.key===3){st.key=2;full()}},1500)}
  if(a==='lwr')st.lwr=(st.lwr+1)%6;if(a==='lf')st.lf=(st.lf+1)%5;if(a==='lr')st.lr=(st.lr+1)%5;
  if(a==='alloff'){const k={nt:st.nt,trip:st.trip,blown:st.blown};st={...fresh(),...k}}
  if(a==='fuses')st.blown={};
  if(a==='check'){check();return}
- if(a==='undo'){const h=U.hist.pop();if(h){if(h[0]==='add')U.cabs=U.cabs.filter(c=>c.id!==h[1].id);else U.cabs.push(h[1]);save()}}
- if(a==='clear'){U.hist.push(...U.cabs.map(c=>['del',c]));U.cabs=[];save();U.checkMsg=null}
+ if(a==='undo'){const h=U.hist.pop();if(h){if(h[0]==='add')U.cabs=U.cabs.filter(c=>c.id!==h[1].id);else U.cabs.push(h[1]);save();addLog('Rückgängig',sn(h[1].a),sn(h[1].b),h[0]==='add'?'Kabel wieder entfernt':'Kabel wieder gesteckt')}}
+ if(a==='clear'){const n=U.cabs.length;U.hist.push(...U.cabs.map(c=>['del',c]));U.cabs=[];save();U.checkMsg=null;if(n)addLog('Gelöscht','','',`Alles abgesteckt (${n} Kabel)`)}
+ if(a==='learn'){U.learn=!U.learn;store.set('learn',U.learn)}
+ if(a==='logclear'){store.set(logKey(),[]);drawLog();return}
+ if(a==='logcopy'){const L=store.get(logKey(),[]);const t=L.map(x=>[x.n,x.t,x.typ,x.von,x.nach,x.info].join('\t')).join('\n');try{navigator.clipboard.writeText('Nr\tZeit\tAktion\tVon\tNach\tErgebnis\n'+t).then(()=>{U.status='Protokoll kopiert – z. B. in Word oder Excel einfügen.';refresh()},()=>{U.status='Kopieren nicht möglich.';refresh()})}catch(e){}return}
  if(a==='newfault'){newFault()}
+ if(a==='mcheck'){checkMess($('min').value);return}
+ if(a==='mnew'){startMess();return}
+ if(a==='maufg'){U.tab='aufg';showView();renderAufg();return}
  if(a==='giveup'){U.solved=true;U.fmsg=['info',`Lösung: ${U.fault.t}. ${U.fault.how}`]}
  if(a==='closehelp'){$('sheet').classList.add('hidden');return}
  if(a==='next'){const p=progress().find(p=>!p.done);if(p){U.hl={socks:[p.a,p.b]};focusSocks([p.a,p.b]);U.status=`Stecke: ${SOCK[p.a].n} → ${SOCK[p.b].n}`;$('sheet').classList.add('hidden')}else U.status='Alle Verbindungen der Musterlösung sind gesteckt – jetzt „Funktion prüfen“.'}
- if(a==='solution'){const pr=progress().filter(p=>!p.done);for(const p of pr){const c={id:'c'+(U.cnt++),a:p.a,b:p.b,c:autoCol(p.a,p.b)};U.cabs.push(c);U.hist.push(['add',c])}save();U.status=`${pr.length} Kabel gesteckt.`}
+ if(a==='solution'){const pr=progress().filter(p=>!p.done);for(const p of pr){const c={id:'c'+(U.cnt++),a:p.a,b:p.b,c:autoCol(p.a,p.b)};U.cabs.push(c);U.hist.push(['add',c])}save();U.status=`${pr.length} Kabel gesteckt.`;addLog('Musterlösung','','',`${pr.length} Kabel automatisch gesteckt`)}
  full()});
 $('m1').onclick=()=>{U.mm='gnd';U.pb=null;refresh()};$('m2').onclick=()=>{U.mm='drop';U.pr=null;U.pb=null;refresh()};
 document.addEventListener('change',e=>{if(e.target.id==='exSel'){U.ex=+e.target.value;store.set('ex',U.ex);st=fresh();loadEx();full()}});
@@ -755,13 +805,218 @@ const Q=[
  ['Spannung messen: Wie schließt du das Multimeter an?',['In Reihe','Parallel','Stromlos','Über die A-Buchse'],1,'Spannung immer parallel messen.']
 ];
 let QZ=null;const best=()=>store.get('qbest',0);
-function startQuiz(){QZ={order:Q.map((_,i)=>i).sort(()=>Math.random()-.5).slice(0,15),i:0,score:0,ans:null}}
+let QTOP='all';function startQuiz(){const pool=QB.map((q,i)=>i).filter(i=>QTOP==='all'||QB[i][4]===QTOP);QZ={order:pool.sort(()=>Math.random()-.5).slice(0,15),i:0,score:0,ans:null}}
+const topBar=()=>`<div class="row" style="margin-bottom:10px">${[['all','Alle'],...Object.entries(TOPIC)].map(([k,l])=>`<button data-top="${k}" class="${QTOP===k?'on':''}">${l} <span class="mut">${k==='all'?QB.length:QB.filter(q=>q[4]===k).length}</span></button>`).join('')}</div>`;
 function renderQuiz(){if(!QZ)startQuiz();const v=$('v-quiz');
- if(QZ.i>=QZ.order.length){const s=QZ.score,n=QZ.order.length;if(s>best())store.set('qbest',s);v.innerHTML=`<div class="card"><h2>${s} von ${n} richtig</h2><p>${s>=n*.8?'Stark – das sitzt.':s>=n*.5?'Solide. Unter „Wissen“ nachlesen.':'Noch üben – an der Wand nachbauen.'}</p><p class="mut">Bestwert ${Math.max(s,best())}/${n}</p><button class="pri" id="qagain">Neue Runde</button></div>`;return}
- const q=Q[QZ.order[QZ.i]];let h=`<div class="card"><div class="mut">Frage ${QZ.i+1}/${QZ.order.length} · ${QZ.score} richtig</div><div class="bar"><i style="width:${QZ.i/QZ.order.length*100}%"></i></div><h2 style="margin:8px 0 10px">${q[0]}</h2>`;
+ if(QZ.i>=QZ.order.length){const s=QZ.score,n=QZ.order.length;if(s>best())store.set('qbest',s);v.innerHTML=topBar()+`<div class="card"><h2>${s} von ${n} richtig</h2><p>${s>=n*.8?'Stark – das sitzt.':s>=n*.5?'Solide. Unter „Wissen“ nachlesen.':'Noch üben – an der Wand nachbauen.'}</p><p class="mut">Bestwert ${Math.max(s,best())}/${n}</p><button class="pri" id="qagain">Neue Runde</button></div>`;return}
+ const q=QB[QZ.order[QZ.i]];let h=topBar()+`<div class="card"><div class="mut">${TOPIC[q[4]]} · Frage ${QZ.i+1}/${QZ.order.length} · ${QZ.score} richtig</div><div class="bar"><i style="width:${QZ.i/QZ.order.length*100}%"></i></div><h2 style="margin:8px 0 10px">${q[0]}</h2>`;
  h+=q[1].map((o,j)=>{let c='qopt';if(QZ.ans!==null){if(j===q[2])c+=' right';else if(j===QZ.ans)c+=' wrong'}return`<button class="${c}" data-q="${j}" ${QZ.ans!==null?'disabled':''}>${o}</button>`}).join('');
  if(QZ.ans!==null)h+=`<div class="msg ${QZ.ans===q[2]?'ok':'bad'}">${QZ.ans===q[2]?'Richtig. ':'Leider falsch. '}${q[3]}</div><div class="row" style="margin-top:8px"><button class="pri" id="qnext">Weiter</button></div>`;v.innerHTML=h+'</div>'}
-$('v-quiz').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.q!==undefined&&QZ.ans===null){QZ.ans=+b.dataset.q;if(QZ.ans===Q[QZ.order[QZ.i]][2])QZ.score++;renderQuiz()}if(b.id==='qnext'){QZ.i++;QZ.ans=null;renderQuiz()}if(b.id==='qagain'){startQuiz();renderQuiz()}});
+$('v-quiz').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.top){QTOP=b.dataset.top;startQuiz();renderQuiz();return}if(b.dataset.q!==undefined&&QZ.ans===null){QZ.ans=+b.dataset.q;if(QZ.ans===QB[QZ.order[QZ.i]][2])QZ.score++;renderQuiz()}if(b.id==='qnext'){QZ.i++;QZ.ans=null;renderQuiz()}if(b.id==='qagain'){startQuiz();renderQuiz()}});
+
+// =============== AUFGABEN-GENERATOR ===============
+const rnd=a=>a[Math.floor(Math.random()*a.length)],ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=(arr,n)=>{const c=[...arr],o=[];while(o.length<n&&c.length)o.push(c.splice(Math.floor(Math.random()*c.length),1)[0]);return o};
+const fmt=(x,d=2)=>(Math.round(x*10**d)/10**d).toString().replace('.',',');
+// ---- Verdrahtungsaufträge ----
+const GND2=[['RL.o54','RL.g1'],['RR.o54','RR.g1']];
+const WT=[
+ ()=>{const f=ri(1,3);return{t:`Bremslicht über Sicherung F${f}`,goal:`Baue das Bremslicht links und rechts. Versorgung: Kl. 15 über <b>Sicherung F${f}</b> in der Schaltereinheit zum Bremslichtschalter (82 → 82a).`,
+  sol:[...P1,['SE.Fo'+f,'SE.B1i'],['SE.B1o','RL.i54'],['SE.B1o','RR.i54'],...GND2],tests:EX[5].tests,fuseCheck:{fuse:'SE.F'+f,ctrl:{key:2,brake:true},lamps:['RL:54','RR:54']}}},
+ ()=>{const f=ri(1,3),z=ri(1,10);return{t:`Bremslicht über Relais K1 (Arbeitskontakt)`,goal:`Der Bremslichtschalter (über F${f}, Kl. 15) soll nur die <b>Spule von K1</b> schalten (86, 85 auf Masse). Der Laststrom kommt von <b>Kl. 30 über Sicherung Z${z}</b> auf K1/30 und über <b>87</b> zu beiden Bremsleuchten.`,
+  sol:[...P1,['SE.Fo'+f,'SE.B1i'],['SE.B1o','RE.K1_86'],['RE.K1_85','RE.r31a'],['RE.r30a','ZS.Z'+z+'i'],['ZS.Z'+z+'o','RE.K1_30'],['RE.K1_87','RL.i54'],['RE.K1_87','RR.i54'],...GND2],
+  tests:[[{key:2,brake:true},r=>[...on('RL:54','RR:54')(r),...(r.rel.K1?[]:['Relais K1 zieht nicht an'])]],[{key:2},off('RL:54','RR:54')],[{key:0,brake:true},off('RL:54','RR:54')]],fuseCheck:{fuse:'ZS.Z'+z,ctrl:{key:2,brake:true},lamps:['RL:54','RR:54']}}},
+ ()=>{const[a,b]=pick([1,2,3,4,5,6,7,8,9,10],2);return{t:`Standlicht mit Z${a} (links) und Z${b} (rechts)`,goal:`Lichtschalter über F4 versorgen. <b>58L über Z${a}</b> zu Standlicht vorne links und Rücklicht links, <b>58R über Z${b}</b> zur rechten Seite. Minus der Rückleuchten auf 31.`,
+  sol:[...LSF,['SE.LS58L','ZS.Z'+a+'i'],['ZS.Z'+a+'o','XL.58L'],['ZS.Z'+a+'o','RL.i58'],['RL.o58','RL.g1'],['SE.LS58R','ZS.Z'+b+'i'],['ZS.Z'+b+'o','XR.58R'],['ZS.Z'+b+'o','RR.i58'],['RR.o58','RR.g1']],
+  tests:EX[1].tests,fuseCheck:{fuse:'ZS.Z'+a,ctrl:{ls:1},lamps:['XL:SL','RL:58']}}},
+ ()=>{const[a,b]=pick([1,2,3,4,5,6,7,8,9,10],2);return{t:`Abblendlicht über Relais K1`,goal:`Lichtschalter 56 → Lenkstock 56. Der Ausgang <b>56b</b> steuert nur die <b>Spule von K1</b>. Laststrom: 30 → K1/30 → <b>87</b> → je eine Sicherung (<b>Z${a}</b> links, <b>Z${b}</b> rechts) → Abblendlicht.`,
+  sol:[...P1,...LSF,['SE.LS56','SE.K56'],['SE.K56b','RE.K1_86'],['RE.K1_85','RE.r31a'],['RE.r30a','RE.K1_30'],['RE.K1_87','ZS.Z'+a+'i'],['RE.K1_87','ZS.Z'+b+'i'],['ZS.Z'+a+'o','XL.56b'],['ZS.Z'+b+'o','XR.56b']],
+  tests:[[{ls:2},r=>[...on('XL:AB','XR:AB')(r),...(r.rel.K1?[]:['Relais K1 zieht nicht an'])]],[{ls:0},off('XL:AB','XR:AB')]],fuseCheck:{fuse:'ZS.Z'+a,ctrl:{ls:2},lamps:['XL:AB']}}},
+ ()=>{const[a,b]=pick([1,2,4,5,7,8,9,10],2);return{t:`Fernlicht über K2 mit Z${a}/Z${b}`,goal:`Abblendlicht wie gewohnt (56b über eigene Sicherungen). Fernlicht: Lenkstock 56a steuert <b>K2</b>. 30 → K2/88, <b>88a → Z${a}</b> → Fernlicht links, <b>88b → Z${b}</b> → Fernlicht rechts. Kontrolle H3 an 56a.`,
+  sol:[...P1,...LSF,...ABBL,['SE.K56a','RE.K2_86'],['RE.K2_85','RE.r31b'],['RE.r30b','RE.K2_88'],['RE.K2_88a','ZS.Z'+a+'i'],['RE.K2_88b','ZS.Z'+b+'i'],['ZS.Z'+a+'o','XL.56a'],['ZS.Z'+b+'o','XR.56a'],['SE.K56a','KI.H3']],
+  tests:EX[3].tests,fuseCheck:{fuse:'ZS.Z'+a,ctrl:{ls:2,fern:true},lamps:['XL:FL']}}},
+ ()=>{const f=ri(1,3),h=rnd([1,2,4,6,7,8]);return{t:`Taster S2 schaltet Kontrollleuchte H${h}`,goal:`Taster S2 (82 → 82a) wird über <b>F${f}</b> (Kl. 15) versorgt und schaltet die <b>Kontrollleuchte H${h}</b> im Kombiinstrument.`,
+  sol:[...P1,['SE.Fo'+f,'SE.B2i'],['SE.B2o','KI.H'+h]],tests:[[{key:2,s2:true},on('KI:H'+h)],[{key:2},off('KI:H'+h)],[{key:0,s2:true},off('KI:H'+h)]],fuseCheck:{fuse:'SE.F'+f,ctrl:{key:2,s2:true},lamps:['KI:H'+h]}}},
+ ()=>{const f=ri(1,3),h=rnd([6,7,8]);return{t:`Ruhekontakt: H${h} aus, wenn S3 gedrückt`,goal:`Kontrollleuchte <b>H${h}</b> soll bei Zündung an leuchten und <b>ausgehen</b>, solange Taster S3 gedrückt ist. Nutze den <b>Ruhekontakt 87a von K1</b>. Alles über F${f}.`,
+  sol:[...P1,['SE.Fo'+f,'SE.B3i'],['SE.B3o','RE.K1_86'],['RE.K1_85','RE.r31a'],['SE.Fo'+f,'RE.K1_30'],['RE.K1_87a','KI.H'+h]],tests:[[{key:2},on('KI:H'+h)],[{key:2,s3:true},off('KI:H'+h)],[{key:0},off('KI:H'+h)]]}},
+ ()=>({t:'Parklicht links und rechts',goal:'Bei <b>Licht aus</b> und Blinkerhebel links sollen Standlicht vorne links und Rücklicht links leuchten (rechts entsprechend). Nutze <b>P30 → 83</b>, 83a für links und 83b für rechts. Lichtschalter über F4.',
+  sol:[...LSF,['SE.P30','SE.W83'],['SE.W83a','XL.58L'],['SE.W83a','RL.i58'],['RL.o58','RL.g1'],['SE.W83b','XR.58R'],['SE.W83b','RR.i58'],['RR.o58','RR.g1']],
+  tests:[[{lever:-1},on('XL:SL','RL:58')],[{lever:1},on('XR:SL','RR:58')],[{lever:-1,ls:2},off('RL:58')],[{},off('XL:SL','RL:58','XR:SL','RR:58')]]}),
+ ()=>{const f=ri(1,3);return{t:`Tagfahrlicht über F${f}`,goal:`Tagfahrlicht links und rechts über <b>F${f}</b> (Kl. 15) versorgen.`,sol:[...P1,['SE.Fo'+f,'XL.TFL'],['SE.Fo'+f,'XR.TFL']],tests:EX[6].tests}},
+ ()=>{const f15=ri(1,3),f30=ri(4,6),h=rnd([5]);return{t:`Blinker/Warnblinker mit F${f15} und F${f30}`,goal:`Warnblinkschalter: 15 über <b>F${f15}</b>, 30 über <b>F${f30}</b>. 49 → K3/49, K3/31 auf Masse, K3/49a → Schalter 49a. L/R zu allen Blinkern, Kontrolle H5 an C2.`,
+  sol:BLINK.map(([a,b])=>[a==='SE.Fo5'?'SE.Fo'+f30:a==='SE.Fo1'?'SE.Fo'+f15:a,b]).concat(P1),tests:EX[4].tests}}
+];
+function newWireTask(){const t=rnd(WT)();
+ t.id='gen';t.t='Auftrag: '+t.t;const seen=new Set();t.sol=t.sol.filter(([a,b])=>{const k=[a,b].sort().join();if(seen.has(k))return false;seen.add(k);return true});
+ const i=EX.findIndex(e=>e.id==='gen');if(i>=0)EX[i]=t;else EX.splice(EX.length-1,0,t);
+ store.set('cab.gen',[]);U.ex=EX.findIndex(e=>e.id==='gen');store.set('ex',U.ex);return t}
+// ---- Messaufgaben ----
+const MESS=[
+ [{key:2,brake:true},'RL.i54',null,'am <b>Plus-Eingang der Bremsleuchte links (54)</b> gegen Masse – Zündung an, Bremse getreten','Am Plus liegt die volle Bordspannung an.'],
+ [{key:2,brake:true},'RL.o54',null,'am <b>Minus-Ausgang der Bremsleuchte links</b> gegen Masse – Zündung an, Bremse getreten','Die Minusseite ist über 31 mit Masse verbunden – fast 0 V.'],
+ [{key:2,brake:true},'RL.i54','RL.o54','den <b>Spannungsfall über der Bremsleuchte links</b> (rot 54+, schwarz 54−) – Zündung an, Bremse getreten','Fast die ganze Spannung fällt am Verbraucher ab.'],
+ [{key:0},'SE.r15a',null,'an der <b>15-Schiene</b> gegen Masse – Zündung aus','Ohne Zündung führt Kl. 15 keine Spannung.'],
+ [{key:2},'SE.r15a',null,'an der <b>15-Schiene</b> gegen Masse – Zündung an (Stellung 2)','Zündung an: 15 ist mit 30 verbunden.'],
+ [{ls:2,fern:true},'RE.K2_86',null,'an <b>Relais K2 Klemme 86</b> gegen Masse – Abblendlicht an, Fernlicht ein','Der Lenkstockschalter legt 56a auf die Spule.'],
+ [{ls:2},'RE.K2_86',null,'an <b>Relais K2 Klemme 86</b> gegen Masse – nur Abblendlicht, kein Fernlicht','Ohne Fernlicht bekommt die Spule kein Plus.'],
+ [{ls:2,fern:true},'ZS.Z4i','ZS.Z4o','den <b>Spannungsfall über Sicherung Z4</b> (rot Eingang, schwarz Ausgang) – Fernlicht ein','Eine intakte Sicherung hat fast keinen Spannungsfall (nur wenige mV bis Zehntel Volt).'],
+ [{ls:2},'XL.56b',null,'am <b>Abblendlicht-Eingang 56b links</b> gegen Masse – Abblendlicht an','Das Xenon-Steuergerät bekommt volle Bordspannung.'],
+ [{key:2,lr:4,lf:0},'LV.RB',null,'am <b>Signal B des Höhensensors hinten</b> gegen Masse – Zündung an, Beladung hinten 4, vorne 0','Starke Beladung → Sensor federt ein → kleine Signalspannung (2,5 V − 4 × 0,4 V).'],
+ [{key:2},'LV.FA',null,'an der <b>Versorgung A des Höhensensors vorne</b> gegen Masse – Zündung an','Das Steuergerät versorgt die Sensoren mit 5 V.'],
+ [{key:0},'LV.FA',null,'an der <b>Versorgung A des Höhensensors vorne</b> – Zündung aus','Steuergerät ohne 15 → keine Sensorversorgung.'],
+ [{ls:1},'ZS.Z1o',null,'am <b>Ausgang von Sicherung Z1</b> gegen Masse – Standlicht an','Hinter der intakten Sicherung liegt Bordspannung an.'],
+ [{key:2},'XL.TFL',null,'an <b>TFL links</b> gegen Masse – Zündung an, Licht aus','Das Tagfahrlicht wird über F3 aus 15 versorgt.'],
+ [{ls:2},'SE.LS30','SE.LS56','den <b>Spannungsfall über dem Lichtschalter</b> (rot 30, schwarz 56) – Abblendlicht an','Ein guter Schaltkontakt hat praktisch 0 V Spannungsfall.'],
+ [{key:2,brake:true},'RL.o54','RL.g1','den <b>Spannungsfall über der Masseleitung der Bremsleuchte links</b> (rot 54−, schwarz 31-Buchse) – Bremse getreten','Eine gute Masseleitung hat fast 0 V Spannungsfall.']];
+function startMess(){const m=rnd(MESS);st=fresh();U.fcab=toCab(MASTER);U.fault=null;U.mtask={c:m[0],a:m[1],b:m[2],t:m[3],why:m[4],res:null,tries:0};U.tab='mess';U.mode='meas';U.mm=m[2]?'drop':'gnd';U.pr=null;U.pb=null;showView();full()}
+function checkMess(val){const m=U.mtask;const r=evalCtrl(m.c,U.fcab,null);const exp=r.v(m.a)-(m.b?r.v(m.b):0);const x=parseFloat(String(val).replace(',','.'));m.tries++;const ok=!isNaN(x)&&Math.abs(x-exp)<=Math.max(0.3,Math.abs(exp)*0.03);
+ if(isNaN(x)){m.res=['bad','Bitte eine Zahl eingeben, z. B. 13,5']}else{addLog('Messwert eingegeben',sn(m.a),m.b?sn(m.b):'Masse',`${val} V (richtig: ${fmt(exp)} V)`,ok?'ok':'bad');if(ok)m.res=['ok',`Richtig: ${fmt(exp)} V. ${m.why}`];else m.res=['bad',m.tries>=2?`Nicht ganz – richtig wären ${fmt(exp)} V. ${m.why}`:'Stimmt noch nicht. Hast du die Schalter richtig gestellt und an der richtigen Buchse gemessen?']}full()}
+// ---- Rechenaufgaben ----
+const RHO=0.0178,FUSES=[5,7.5,10,15,20,25,30],AQ=[0.5,0.75,1,1.5,2.5,4,6];
+const CALC=[
+ ()=>{const P=rnd([5,10,21,35,55,60]),U_=12,I=P/U_;return{q:`Eine Lampe 12 V / ${P} W. Wie groß ist der Strom?`,a:I,u:'A',s:`I = P / U = ${P} W / ${U_} V = <b>${fmt(I)} A</b>`}},
+ ()=>{const P=rnd([5,10,21,55,60]),R=144/P;return{q:`Wie groß ist der Widerstand (betriebswarm) einer Lampe 12 V / ${P} W?`,a:R,u:'Ω',s:`R = U² / P = (12 V)² / ${P} W = 144 / ${P} = <b>${fmt(R)} Ω</b>`}},
+ ()=>{const n=ri(2,4),P=rnd([5,21,55]),I=n*P/12;return{q:`${n} Lampen je 12 V / ${P} W sind parallel geschaltet. Wie groß ist der Gesamtstrom?`,a:I,u:'A',s:`Eine Lampe: I = ${P} / 12 = ${fmt(P/12)} A. Parallel addieren sich die Ströme: ${n} × ${fmt(P/12)} A = <b>${fmt(I)} A</b>`}},
+ ()=>{const l=ri(2,6),A=rnd([0.75,1,1.5,2.5]),I=rnd([4,5,8,10]),dU=I*RHO*l/A;return{q:`Eine Plusleitung aus Kupfer ist ${l} m lang, Querschnitt ${fmt(A)} mm², Strom ${I} A (ρ = 0,0178 Ω·mm²/m). Wie groß ist der Spannungsfall?`,a:dU,u:'V',d:3,s:`R = ρ · l / A = 0,0178 · ${l} / ${fmt(A)} = ${fmt(RHO*l/A,4)} Ω<br>ΔU = I · R = ${I} A · ${fmt(RHO*l/A,4)} Ω = <b>${fmt(dU,3)} V</b>`}},
+ ()=>{const n=ri(2,4),P=rnd([21,35,55]),I=n*P/12,F=FUSES.find(f=>f>=I*1.0);return{q:`${n} Verbraucher je ${P} W (12 V) hängen an einer Sicherung. Welche Normsicherung (5 / 7,5 / 10 / 15 / 20 / 25 / 30 A) ist die kleinste passende?`,a:F,u:'A',s:`Strom: ${n} × ${P} W / 12 V = ${fmt(I)} A. Die kleinste Normgröße darüber ist <b>${fmt(F,1)} A</b>.`}},
+ ()=>{const P=rnd([21,55,60]),U2=rnd([10.5,11,11.5]),P2=P*(U2/12)**2;return{q:`Eine Lampe 12 V / ${P} W bekommt wegen schlechter Masse nur noch ${fmt(U2,1)} V. Welche Leistung hat sie jetzt (Widerstand gleich angenommen)?`,a:P2,u:'W',s:`P ~ U², also P' = P · (U'/U)² = ${P} · (${fmt(U2,1)} / 12)² = <b>${fmt(P2)} W</b>`}},
+ ()=>{const P1_=rnd([5,10,21]),P2_=rnd([21,55]),R1=144/P1_,R2=144/P2_,I=12/(R1+R2);return{q:`Eine Lampe 12 V/${P1_} W und eine Lampe 12 V/${P2_} W werden versehentlich in Reihe an 12 V geschaltet. Wie groß ist der Strom?`,a:I,u:'A',s:`R1 = 144 / ${P1_} = ${fmt(R1)} Ω, R2 = 144 / ${P2_} = ${fmt(R2)} Ω<br>I = U / (R1 + R2) = 12 / ${fmt(R1+R2)} = <b>${fmt(I)} A</b>`}},
+ ()=>{const R=rnd([60,70,80,90]),U_=13.5,I=U_/R*1000;return{q:`Eine Relaisspule hat ${R} Ω und liegt an ${fmt(U_,1)} V. Wie groß ist der Spulenstrom in mA?`,a:I,u:'mA',d:0,s:`I = U / R = ${fmt(U_,1)} V / ${R} Ω = ${fmt(U_/R,4)} A = <b>${fmt(I,0)} mA</b>`}},
+ ()=>{const C=rnd([44,60,72]),I=rnd([20,30,50,80]),d=C*0.5/(I/1000)/24;return{q:`Batterie ${C} Ah, davon sind 50 % nutzbar. Ruhestrom ${I} mA. Nach wie vielen Tagen ist die nutzbare Ladung verbraucht?`,a:d,u:'Tage',d:1,s:`Nutzbar: ${C} Ah · 0,5 = ${C/2} Ah. Zeit = ${C/2} Ah / ${I/1000} A = ${fmt(C/2/(I/1000),1)} h = <b>${fmt(d,1)} Tage</b>`}},
+ ()=>{const l=ri(3,8),I=rnd([5,8,10,15]),A=RHO*l*I/0.5,N=AQ.find(a=>a>=A);return{q:`Leitung ${l} m, Strom ${I} A, max. Spannungsfall 0,5 V (ρ = 0,0178). Welcher Normquerschnitt (0,5 / 0,75 / 1 / 1,5 / 2,5 / 4 / 6 mm²) ist mindestens nötig?`,a:N,u:'mm²',s:`A = ρ · l · I / ΔU = 0,0178 · ${l} · ${I} / 0,5 = ${fmt(A,3)} mm² → nächste Normgröße <b>${fmt(N)} mm²</b>`}},
+ ()=>{const U_=rnd([13.5,14,14.2]),dU=rnd([0.3,0.5,0.8]),p=dU/U_*100;return{q:`Bordspannung ${fmt(U_,1)} V, an einer Leitung fallen ${fmt(dU,1)} V ab. Wie viel Prozent sind das?`,a:p,u:'%',s:`${fmt(dU,1)} / ${fmt(U_,1)} · 100 = <b>${fmt(p)} %</b>`}}];
+const genCalc=()=>{const c=rnd(CALC)();c.d=c.d??2;return c};
+const okNum=(x,c)=>{const v=parseFloat(String(x).replace(',','.'));return!isNaN(v)&&Math.abs(v-c.a)<=Math.max(Math.abs(c.a)*0.02,0.5*10**-(c.d))};
+// ---- Ansicht Aufgaben ----
+const A={sub:'wire',calc:null,cin:'',cres:null,exam:null};
+function renderAufg(){const v=$('v-aufg');const sb=[['wire','Verdrahtung'],['mess','Messen'],['calc','Rechnen'],['exam','Gesellenprüfung']];
+ let h=`<div class="seg" style="margin-bottom:12px">${sb.map(([k,l])=>`<button data-sub="${k}" class="${A.sub===k?'on':''}">${l}</button>`).join('')}</div>`;
+ if(A.sub==='wire'){const g=EX.find(e=>e.id==='gen');h+=`<div class="card"><h3>Verdrahtungsauftrag</h3><p style="margin:0">Du bekommst einen zufälligen Auftrag wie vom Ausbilder – mit vorgegebenen Sicherungen und Relais. Die Wand prüft danach, ob alles funktioniert <b>und</b> ob du die richtige Sicherung bzw. das Relais genommen hast.</p>${g?`<div class="msg info"><b>${g.t}</b><br>${g.goal}</div>`:''}<div class="row" style="margin-top:10px"><button class="pri" data-ag="wnew">${g?'Neuer Auftrag':'Auftrag erzeugen'}</button>${g?'<button data-ag="wgo">Zur Wand</button>':''}</div><p class="mut">${WT.length} Auftragsarten mit zufälligen Sicherungen und Leuchten. Die Hilfe-Lampe zeigt auch hier die Schritte.</p></div>`}
+ if(A.sub==='mess')h+=`<div class="card"><h3>Messaufgabe</h3><p style="margin:0">Die Wand wird komplett verdrahtet. Du bekommst einen Messauftrag, stellst die Schalter, misst und gibst den Wert ein.</p><div class="row" style="margin-top:10px"><button class="pri" data-ag="mnew">Messaufgabe starten</button></div><p class="mut">${MESS.length} Messaufträge: Spannung gegen Masse, Spannungsfall über Lampe, Sicherung, Schalter und Masseleitung, Sensorsignale.</p></div>`;
+ if(A.sub==='calc'){if(!A.calc)A.calc=genCalcT(null);const c=A.calc;h+=`<div class="card"><h3>Rechenaufgabe</h3><p style="font-size:18px;margin:0 0 10px">${c.q}</p><div class="row"><input id="cin" inputmode="decimal" value="${esc(A.cin)}" placeholder="Ergebnis" style="font:600 18px system-ui,sans-serif;min-height:44px;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:160px"><span style="align-self:center;font-weight:700">${c.u}</span><button class="pri" data-ag="ccheck">Prüfen</button><button data-ag="cnew">Neue Aufgabe</button></div>${A.cres?`<div class="msg ${A.cres[0]}">${A.cres[1]}</div>`:''}<p class="mut">Komma oder Punkt geht beide. Gerechnet wird mit 12 V Nennspannung, wenn nichts anderes steht.</p></div>`}
+ if(A.sub==='exam')h+=examHtml();
+ v.innerHTML=h}
+// ---- Prüfung ----
+const EXT={t1:{n:'Gesellenprüfung Teil 1',d:'Gemischte Fragen aus Elektrik, Motor, Bremse, Fahrwerk, Antrieb und Arbeitssicherheit plus Rechenaufgaben.',tags:['el','mot','brems','fahr','antr','sich'],mc:16,calc:4,ct:null},
+ kit:{n:'Teil 2 · Kfz- und Instandhaltungstechnik',d:'Motor, Bremse, Fahrwerk, Antrieb, Hochvolt, Sicherheit plus Kfz-Rechnen.',tags:['mot','brems','fahr','antr','sich','hv'],mc:12,calc:3,ct:'mech'},
+ diag:{n:'Teil 2 · Diagnosetechnik',d:'Fahrzeugelektrik, Messen, Fehlersuche, Bussysteme, Hochvolt plus Elektro-Rechnen.',tags:['diag','el','hv'],mc:12,calc:3,ct:'el'},
+ wiso:{n:'Teil 2 · Wirtschafts- und Sozialkunde',d:'Ausbildungsrecht, Sozialversicherung, Tarif, Betriebsrat, Urlaub.',tags:['wiso'],mc:9,calc:0}};
+function newExam(t){const X=EXT[t];const pool=QB.map((q,i)=>i).filter(i=>X.tags.includes(QB[i][4]));const mc=pick(pool,X.mc).map(i=>({k:'mc',q:QB[i],ans:null}));const ca=[...Array(X.calc)].map(()=>({k:'c',c:genCalcT(X.ct),ans:''}));
+ const items=[];let a=0,b=0;while(a<mc.length||b<ca.length){for(let k=0;k<4&&a<mc.length;k++)items.push(mc[a++]);if(b<ca.length)items.push(ca[b++])}
+ const w=100/(X.mc+2*X.calc);A.exam={t,items,t0:Date.now(),done:false,wm:w,wc:2*w}}
+const NOTE=p=>p>=92?'1 – sehr gut':p>=81?'2 – gut':p>=67?'3 – befriedigend':p>=50?'4 – ausreichend':p>=30?'5 – mangelhaft':'6 – ungenügend';
+function examHtml(){const E=A.exam;
+ if(!E){let h=`<div class="card"><h3>Gesellenprüfung Kfz-Mechatroniker</h3><p style="margin:0">Teil 1 findet vor Ende des 2. Ausbildungsjahres statt und zählt 35 %, Teil 2 zählt 65 %. Teil 2 besteht aus den Bereichen Kundenauftrag, Kfz- und Instandhaltungstechnik, Diagnosetechnik sowie Wirtschafts- und Sozialkunde. Bewertet wird mit dem 100-Punkte-Schlüssel.</p><p class="mut">Übungsprüfungen – nicht die echten Aufgaben. Genaue Zeiten und Aufbau gibt dir deine Handwerkskammer.</p></div>`;
+  for(const[k,X]of Object.entries(EXT))h+=`<div class="card"><h3>${X.n}</h3><p style="margin:0 0 8px">${X.d}</p><p class="mut" style="margin:0 0 8px">${X.mc} Auswahlaufgaben${X.calc?` + ${X.calc} Rechenaufgaben (doppelt gewertet)`:''} · ${QB.filter(q=>X.tags.includes(q[4])).length} Fragen im Pool</p><button class="pri" data-ag="enew" data-et="${k}">Starten</button></div>`;
+  h+=`<div class="card"><h3>Teil 2 · Kundenauftrag (praktisch)</h3><p style="margin:0 0 8px">Wie in der Prüfung: Kundenbeanstandung an der fertig verdrahteten Wand, Fehler systematisch eingrenzen und benennen. Danach das Fachgespräch üben.</p><div class="row"><button class="pri" data-ag="ka">Kundenauftrag starten</button></div>
+  <details style="margin-top:10px"><summary><b>Fachgespräch üben</b> (${FACH.length} typische Fragen)</summary>${FACH.map(([q,a])=>`<details style="margin:8px 0 0 8px"><summary>${q}</summary><p class="mut" style="margin:4px 0 0">${a}</p></details>`).join('')}</details></div>`;
+  return h}
+ const X=EXT[E.t];let pts=0,h=`<div class="card"><h3>${X.n}</h3><p class="mut" style="margin:0">Gestartet ${new Date(E.t0).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})} Uhr · Taschenrechner erlaubt · ${E.items.length} Aufgaben</p></div>`;
+ E.items.forEach((it,i)=>{const wp=it.k==='mc'?E.wm:E.wc;h+=`<div class="card"><div class="mut">Aufgabe ${i+1} · ${fmt(wp,1)} Punkte${it.k==='mc'?' · '+TOPIC[it.q[4]]:' · Rechnen'}</div>`;
+  if(it.k==='mc'){h+=`<p style="font-weight:600;margin:4px 0 6px">${it.q[0]}</p>`+it.q[1].map((o,j)=>{let c='qopt';if(E.done){if(j===it.q[2])c+=' right';else if(j===it.ans)c+=' wrong'}else if(j===it.ans)c+=' on';return`<button class="${c}" data-ex="${i}" data-o="${j}" ${E.done?'disabled':''}>${o}</button>`}).join('');
+   if(E.done){const ok=it.ans===it.q[2];if(ok)pts+=wp;h+=`<div class="msg ${ok?'ok':'bad'}">${ok?fmt(wp,1):'0'} Punkte. ${it.q[3]}</div>`}}
+  else{h+=`<p style="font-weight:600;margin:4px 0 6px">${it.c.q}</p><div class="row"><input data-ei="${i}" inputmode="decimal" value="${esc(it.ans)}" ${E.done?'disabled':''} style="font:600 17px system-ui,sans-serif;min-height:42px;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:150px"><span style="align-self:center;font-weight:700">${it.c.u}</span></div>`;
+   if(E.done){const ok=okNum(it.ans,it.c);if(ok)pts+=wp;h+=`<div class="msg ${ok?'ok':'bad'}">${ok?fmt(wp,1):'0'} Punkte. ${it.c.s}</div>`}}
+  h+='</div>'});
+ if(E.done){const p=Math.round(pts);const hist=store.get('examhist',[]);h=`<div class="card" style="border:2px solid var(--acc)"><h2>${p} von 100 Punkten</h2><p style="font-size:20px;margin:6px 0">Note ${NOTE(p)}</p><p class="mut" style="margin:0">Zeit: ${Math.max(1,Math.round((E.t1-E.t0)/60000))} Minuten · Schlüssel: ab 92 sehr gut, 81 gut, 67 befriedigend, 50 ausreichend, 30 mangelhaft</p>${hist.length?`<p class="mut" style="margin:6px 0 0">Deine letzten Ergebnisse: ${hist.slice(-6).map(x=>`${EXT[x.t]?EXT[x.t].n.replace('Teil 2 · ','T2 '):'?'} ${x.p}`).join(' · ')}</p>`:''}<div class="row" style="margin-top:8px"><button class="pri" data-ag="enew" data-et="${E.t}">Nochmal</button><button data-ag="eback">Andere Prüfung</button></div></div>`+h}
+ else h+=`<div class="row"><button class="pri" data-ag="edone">Abgeben</button><button data-ag="eback">Abbrechen</button></div>`;
+ return h}
+$('v-aufg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.sub){A.sub=b.dataset.sub;renderAufg();return}
+ if(b.dataset.ex!==undefined){A.exam.items[+b.dataset.ex].ans=+b.dataset.o;renderAufg();return}
+ const g=b.dataset.ag;
+ if(g==='wnew'){newWireTask();renderAufg()}
+ if(g==='wgo'){U.ex=EX.findIndex(e=>e.id==='gen');U.tab='wand';st=fresh();U.mode='plug';loadEx();showView();full();$('wallbox').scrollIntoView({behavior:'smooth'})}
+ if(g==='mnew'){startMess();$('v-wand').scrollIntoView({behavior:'smooth'})}
+ if(g==='ccheck'){A.cin=$('cin').value;const c=A.calc;A.cres=okNum(A.cin,c)?['ok','Richtig! '+c.s]:['bad','Leider falsch. Lösungsweg: '+c.s];renderAufg()}
+ if(g==='cnew'){A.calc=genCalcT(null);A.cin='';A.cres=null;renderAufg()}
+ if(g==='enew'){newExam(b.dataset.et);renderAufg();window.scrollTo(0,0)}
+ if(g==='eback'){A.exam=null;renderAufg()}
+ if(g==='ka'){U.tab='fehler';U.lock=null;newFault();showView();full();$('v-wand').scrollIntoView({behavior:'smooth'})}
+ if(g==='edone'){A.exam.done=true;A.exam.t1=Date.now();renderAufg();let p=0;A.exam.items.forEach(it=>{if(it.k==='mc'?it.ans===it.q[2]:okNum(it.ans,it.c))p+=it.k==='mc'?A.exam.wm:A.exam.wc});const h=store.get('examhist',[]);h.push({t:A.exam.t,p:Math.round(p),d:Date.now()});store.set('examhist',h.slice(-30));renderAufg();window.scrollTo(0,0)}});
+$('v-aufg').addEventListener('input',e=>{if(e.target.dataset.ei!==undefined)A.exam.items[+e.target.dataset.ei].ans=e.target.value;if(e.target.id==='cin')A.cin=e.target.value});
+function showView(){const w=U.tab==='wand'||U.tab==='fehler'||U.tab==='mess';$('v-wand').classList.toggle('hidden',!w);$('v-quiz').classList.toggle('hidden',U.tab!=='quiz');$('v-wissen').classList.toggle('hidden',U.tab!=='wissen');$('v-aufg').classList.toggle('hidden',U.tab!=='aufg');
+ document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x.dataset.tab===(U.tab==='mess'?'aufg':U.tab)));if(w)setTimeout(fit,0)}
+
+// =============== FRAGENPOOL KFZ (Gesellenprüfung) ===============
+const QK=[
+ // Motor
+ ['Richtige Reihenfolge der Takte beim Viertaktmotor?',['Ansaugen – Verdichten – Arbeiten – Ausstoßen','Verdichten – Ansaugen – Arbeiten – Ausstoßen','Ansaugen – Arbeiten – Verdichten – Ausstoßen','Arbeiten – Ansaugen – Ausstoßen – Verdichten'],0,'Ansaugen, Verdichten, Arbeiten (Verbrennen), Ausstoßen – dafür braucht die Kurbelwelle zwei Umdrehungen.','mot'],
+ ['Wie wird das Gemisch beim Dieselmotor gezündet?',['Zündkerze','Selbstzündung durch die hohe Temperatur der verdichteten Luft','Glühkerze bei jedem Takt','Zündspule'],1,'Diesel = Selbstzünder. Die Glühkerze hilft nur beim Kaltstart.','mot'],
+ ['Wie schnell dreht die Nockenwelle im Verhältnis zur Kurbelwelle (Viertakt)?',['Gleich schnell','Halb so schnell','Doppelt so schnell','Viermal so schnell'],1,'Jedes Ventil öffnet einmal pro Arbeitsspiel = zwei Kurbelwellenumdrehungen.','mot'],
+ ['Was bedeutet λ = 1?',['Luftmangel','Stöchiometrisches Gemisch – Luft und Kraftstoff passen genau (ca. 14,7 : 1 bei Benzin)','Luftüberschuss','Motor aus'],1,'λ < 1 fett (Luftmangel), λ > 1 mager (Luftüberschuss).','mot'],
+ ['Was misst die Lambdasonde?',['Kraftstoffdruck','Restsauerstoffgehalt im Abgas','Abgastemperatur','Ansaugluftmasse'],1,'Daraus regelt das Steuergerät das Gemisch auf λ ≈ 1.','mot'],
+ ['Welche Schadstoffe wandelt ein Dreiwegekatalysator um?',['Nur CO','CO, HC und NOx','Nur Ruß','CO2 und Wasser'],1,'Er braucht dafür ein Gemisch nahe λ = 1.','mot'],
+ ['Was bedeutet das „W“ bei Motoröl 5W-30?',['Wasserfest','Winter – Angabe zur Kälteviskosität','Werkstatt','Wärmeklasse'],1,'Die Zahl vor dem W beschreibt das Kaltverhalten, die Zahl dahinter die Viskosität bei Betriebstemperatur.','mot'],
+ ['Wozu dient der Ladeluftkühler beim Turbomotor?',['Er kühlt das Motoröl','Er kühlt die verdichtete Luft – höhere Dichte, mehr Füllung','Er kühlt den Katalysator','Er heizt den Innenraum'],1,'Kühlere Luft ist dichter, damit kommt mehr Sauerstoff in den Zylinder.','mot'],
+ ['Was passiert bei der Regeneration des Dieselpartikelfilters?',['Der Filter wird getauscht','Der gesammelte Ruß wird bei hoher Temperatur verbrannt','AdBlue wird eingespritzt','Öl wird gewechselt'],1,'Dazu sind hohe Abgastemperaturen nötig – Kurzstrecke behindert die Regeneration.','mot'],
+ ['Wofür wird AdBlue (SCR-System) verwendet?',['Ruß verbrennen','Stickoxide (NOx) reduzieren','Kühlmittel ersetzen','Kraftstoff reinigen'],1,'Die Harnstofflösung reagiert im SCR-Katalysator mit den Stickoxiden zu Stickstoff und Wasser.','mot'],
+ ['Kompressionsprüfung: Ein Zylinder hat deutlich weniger Druck. Mögliche Ursache?',['Zündkerze verschlissen','Undichte Ventile oder Kolbenringe','Luftfilter verschmutzt','Batterie schwach'],1,'Mit einem Druckverlusttest findest du heraus, wo es entweicht (Ansaug, Auspuff, Kurbelgehäuse, Kühlsystem).','mot'],
+ ['Was regelt der Thermostat im Kühlsystem?',['Den Öldruck','Ob das Kühlmittel durch den Kühler (großer Kreislauf) oder nur durch den Motor fließt','Die Lüfterdrehzahl über Kl. 50','Den Kraftstoffdruck'],1,'Kalter Motor: kleiner Kreislauf, schnelleres Warmwerden.','mot'],
+ ['Was misst der Luftmassenmesser?',['Den Luftdruck im Reifen','Die vom Motor angesaugte Luftmasse','Die Abgasmenge','Die Öltemperatur'],1,'Daraus berechnet das Steuergerät die Einspritzmenge.','mot'],
+ // Bremse
+ ['Warum muss Bremsflüssigkeit regelmäßig gewechselt werden?',['Sie verdunstet','Sie ist hygroskopisch – Wasser senkt den Siedepunkt, Dampfblasen möglich','Sie wird dicker','Sie verliert die Farbe'],1,'Bei Hitze bilden sich Dampfblasen, das Pedal fällt durch.','brems'],
+ ['Was verhindert das ABS?',['Durchdrehende Räder beim Anfahren','Das Blockieren der Räder beim Bremsen – das Auto bleibt lenkbar','Überhitzen der Bremse','Verschleiß der Beläge'],1,'Das Anfahren regelt die ASR (Antriebsschlupfregelung).','brems'],
+ ['Wo findest du die Mindestdicke einer Bremsscheibe?',['Im Fahrzeugschein','Eingeprägt auf der Scheibe bzw. in den Herstellerdaten','Auf dem Belag','Am Bremssattel'],1,'Bei Unterschreiten: Scheiben achsweise erneuern.','brems'],
+ ['Bremsen werden immer …',['einzeln getauscht','achsweise (beide Seiten) erneuert','nur hinten getauscht','nach Gefühl getauscht'],1,'Sonst ist die Bremswirkung links/rechts ungleich – das Fahrzeug zieht.','brems'],
+ ['Was bewirkt der Bremskraftverstärker?',['Er erhöht die Pedalkraft mit Unterdruck bzw. elektrisch','Er kühlt die Bremse','Er verhindert Blockieren','Er misst den Belag'],0,'Ohne ihn wäre eine sehr große Pedalkraft nötig.','brems'],
+ // Fahrwerk / Reifen
+ ['Gesetzliche Mindestprofiltiefe bei Pkw-Reifen in Deutschland?',['1,0 mm','1,6 mm','3,0 mm','4,0 mm'],1,'Empfohlen sind mehr (Sommer ca. 3 mm, Winter ca. 4 mm).','fahr'],
+ ['Reifen 205/55 R16 91V: Was bedeutet „55“?',['Tragfähigkeit','Querschnittsverhältnis Höhe/Breite in %','Felgendurchmesser','Höchstgeschwindigkeit'],1,'205 = Breite in mm, R = Radialbauweise, 16 = Felge in Zoll, 91 = Lastindex, V = Geschwindigkeitssymbol.','fahr'],
+ ['Was bedeutet beim Reifen die DOT-Angabe „2423“?',['Luftdruck 2,4 bar','Hergestellt in der 24. Woche 2023','Profiltiefe','Tragfähigkeit'],1,'Die letzten vier Ziffern der DOT-Nummer: Woche und Jahr.','fahr'],
+ ['Was bedeutet Vorspur?',['Räder stehen vorne näher zusammen als hinten (in Fahrtrichtung)','Räder stehen oben nach innen','Räder stehen vorne weiter auseinander','Das Rad ist nach vorne versetzt'],0,'Gegenteil: Nachspur.','fahr'],
+ ['Negativer Sturz bedeutet …',['Rad oben nach außen geneigt','Rad oben nach innen geneigt','Rad zeigt nach vorne','Rad ist zu tief'],1,'Negativer Sturz verbessert die Seitenführung in Kurven.','fahr'],
+ ['Was ist die Aufgabe des Stoßdämpfers?',['Das Fahrzeug tragen','Schwingungen der Feder dämpfen','Die Spur einstellen','Lenkkräfte verstärken'],1,'Tragen tut die Feder, der Dämpfer baut die Schwingung ab.','fahr'],
+ // Antrieb
+ ['Wozu dient das Ausgleichsgetriebe (Differenzial)?',['Gänge schalten','Drehzahlunterschiede der Antriebsräder in Kurven ausgleichen','Motor und Getriebe trennen','Die Bremse unterstützen'],1,'Das kurveninnere Rad legt einen kürzeren Weg zurück.','antr'],
+ ['Die Manschette einer Antriebswelle ist gerissen. Folge?',['Keine','Fett tritt aus, Schmutz dringt ein – Gelenk verschleißt','Bremse fällt aus','Motor überhitzt'],1,'Manschette sofort erneuern, sonst muss das Gleichlaufgelenk getauscht werden.','antr'],
+ ['Was ist die Aufgabe der Kupplung?',['Den Motor kühlen','Kraftfluss zwischen Motor und Getriebe trennen und weich herstellen','Drehzahlen in Kurven ausgleichen','Das Fahrzeug bremsen'],1,'Zum Anfahren und Schalten.','antr'],
+ // Diagnose
+ ['Wie viele Pole hat der OBD-Diagnosestecker im Pkw?',['8','12','16','24'],2,'Der 16-polige Stecker sitzt meist im Fußraum Fahrerseite.','diag'],
+ ['Was zeigen die „Umgebungsbedingungen“ (Freeze Frame) eines Fehlerspeichereintrags?',['Die Außentemperatur heute','Betriebsdaten im Moment, als der Fehler aufgetreten ist','Den Kilometerstand bei Auslieferung','Die Reifendrücke'],1,'Z. B. Drehzahl, Temperatur, Spannung – hilft beim Nachstellen des Fehlers.','diag'],
+ ['Wofür nimmt man ein Oszilloskop statt eines Multimeters?',['Für Widerstände','Um den zeitlichen Verlauf eines Signals zu sehen (z. B. Sensor, CAN)','Für Strom über 10 A','Für Durchgang'],1,'Das Multimeter zeigt nur einen Mittelwert.','diag'],
+ ['Ein induktiver Kurbelwellensensor liefert …',['Gleichspannung','eine Wechselspannung, deren Frequenz mit der Drehzahl steigt','nur 5 V','keine Spannung'],1,'Ohne Drehzahlsignal startet der Motor nicht.','diag'],
+ ['Richtige Reihenfolge der Fehlersuche?',['Teile tauschen, dann messen','Beanstandung prüfen – Fehlerspeicher – Prüfplan/Messen – Instandsetzen – Funktionsprüfung','Fehlerspeicher löschen, Probefahrt','Kunde anrufen'],1,'Erst verstehen, dann messen, dann tauschen.','diag'],
+ ['Was solltest du nach einer Reparatur mit dem Fehlerspeicher machen?',['Nichts','Löschen und nach Probefahrt erneut auslesen','Ausdrucken und wegwerfen','Steuergerät abklemmen'],1,'So siehst du, ob der Fehler wirklich behoben ist.','diag'],
+ // Hochvolt / Sicherheit
+ ['Welche Farbe haben Hochvoltleitungen im Fahrzeug?',['Rot','Orange','Blau','Grün'],1,'Orange = Hochvolt, Finger weg ohne Qualifikation.','hv'],
+ ['Wer darf ein HV-Fahrzeug spannungsfrei schalten?',['Jeder Mechatroniker','Nur eine dafür geschulte, fachkundige Person (HV-Qualifikation)','Der Kunde','Der Azubi im 1. Jahr'],1,'Dazu gehört: freischalten, gegen Wiedereinschalten sichern, Spannungsfreiheit feststellen.','hv'],
+ ['Welche Brandklasse gilt für brennende Flüssigkeiten wie Benzin?',['A','B','C','D'],1,'A fest, B flüssig, C Gase, D Metalle, F Speisefette.','sich'],
+ ['Wie wird Altöl entsorgt?',['In den Ausguss','Getrennt sammeln, als gefährlicher Abfall entsorgen','Mit Restmüll','Mit Kühlmittel mischen'],1,'Nie mit anderen Flüssigkeiten mischen.','sich'],
+ ['Fahrzeug auf der Hebebühne – worauf achtest du?',['Egal wo die Arme sitzen','Nur an den vom Hersteller vorgesehenen Aufnahmepunkten anheben','Am Schweller irgendwo','Am Unterbodenschutz'],1,'Sonst Beschädigung oder Absturzgefahr.','sich'],
+ ['Vor Arbeiten an der Bordelektrik (z. B. Airbag) klemmst du zuerst …',['den Pluspol ab','den Minuspol ab','beide gleichzeitig','gar nichts'],1,'Minus zuerst ab, beim Anklemmen zuletzt dran – so gibt es keinen Kurzschluss mit dem Werkzeug an der Karosserie.','sich'],
+ // WiSo
+ ['Wie lange darf die Probezeit in der Ausbildung sein?',['1 bis 2 Wochen','1 bis 4 Monate','6 Monate','1 Jahr'],1,'So steht es im Berufsbildungsgesetz (BBiG).','wiso'],
+ ['Wer ist für die Gesellenprüfung der Kfz-Mechatroniker zuständig?',['IHK','Handwerkskammer bzw. deren Prüfungsausschuss (Innung)','Berufsschule allein','TÜV'],1,'Kfz-Mechatroniker ist ein Handwerksberuf.','wiso'],
+ ['Welche Sozialversicherung zahlt der Arbeitgeber allein?',['Krankenversicherung','Unfallversicherung (Berufsgenossenschaft)','Rentenversicherung','Arbeitslosenversicherung'],1,'Die anderen werden grundsätzlich geteilt.','wiso'],
+ ['Wer schließt einen Tarifvertrag ab?',['Betriebsrat und Chef','Gewerkschaft und Arbeitgeberverband (oder einzelner Arbeitgeber)','Azubi und Ausbilder','Staat und Kammer'],1,'Darin stehen z. B. Lohn, Urlaub, Arbeitszeit.','wiso'],
+ ['Ab wie vielen ständigen wahlberechtigten Arbeitnehmern kann ein Betriebsrat gewählt werden?',['3','5','20','50'],1,'Steht im Betriebsverfassungsgesetz.','wiso'],
+ ['Was ist die JAV?',['Jahresabschlussversammlung','Jugend- und Auszubildendenvertretung','Ein Prüfungsausschuss','Eine Versicherung'],1,'Sie vertritt Jugendliche und Azubis (unter 25) im Betrieb.','wiso'],
+ ['Gesetzlicher Mindesturlaub bei einer 6-Tage-Woche (Erwachsene)?',['18 Werktage','24 Werktage','30 Werktage','20 Werktage'],1,'Das entspricht 4 Wochen. Tarifverträge geben oft mehr.','wiso'],
+ ['Was ist Voraussetzung für die Zulassung zur Gesellenprüfung?',['Führerschein','Geführter Ausbildungsnachweis (Berichtsheft)','Eigenes Werkzeug','Meisterbrief'],1,'Ohne ordentlich geführten Ausbildungsnachweis keine Zulassung.','wiso'],
+ ['Nach der Probezeit kann der Azubi kündigen, wenn er die Ausbildung aufgibt – mit welcher Frist?',['Fristlos','4 Wochen','3 Monate','gar nicht'],1,'BBiG: 4 Wochen Frist, schriftlich, mit Angabe des Grundes.','wiso']
+];
+const TOPIC={el:'Elektrik',mot:'Motor',brems:'Bremse',fahr:'Fahrwerk',antr:'Antrieb',diag:'Diagnose',hv:'Hochvolt',sich:'Sicherheit',wiso:'WiSo'};
+const QB=[...Q.map(q=>[...q,'el']),...QK];
+// Kfz-Rechnen
+const CALCK=[
+ ()=>{const d=rnd([76.5,79.5,81,82.5,84]),s=rnd([75.6,80,86.4,88]),z=4,V=Math.PI/4*(d/10)**2*(s/10)*z;return{q:`Vierzylinder, Bohrung ${fmt(d,1)} mm, Hub ${fmt(s,1)} mm. Wie groß ist der Gesamthubraum in cm³?`,a:V,u:'cm³',d:0,s:`V_h = π/4 · d² · s = π/4 · (${fmt(d/10,2)} cm)² · ${fmt(s/10,2)} cm = ${fmt(V/z,1)} cm³<br>V_H = V_h · z = ${fmt(V/z,1)} · 4 = <b>${fmt(V,0)} cm³</b>`}},
+ ()=>{const Vh=rnd([400,450,500,550]),Vc=rnd([40,45,50,55]),e=(Vh+Vc)/Vc;return{q:`Hubraum eines Zylinders ${Vh} cm³, Verdichtungsraum ${Vc} cm³. Wie groß ist das Verdichtungsverhältnis ε?`,a:e,u:': 1',d:1,s:`ε = (V_h + V_c) / V_c = (${Vh} + ${Vc}) / ${Vc} = <b>${fmt(e,1)} : 1</b>`}},
+ ()=>{const M=rnd([150,200,250,320]),n=rnd([2000,3000,4000]),P=M*n/9550;return{q:`Ein Motor gibt bei ${n} 1/min ein Drehmoment von ${M} Nm ab. Welche Leistung in kW?`,a:P,u:'kW',d:1,s:`P = M · n / 9550 = ${M} · ${n} / 9550 = <b>${fmt(P,1)} kW</b>`}},
+ ()=>{const z1=rnd([13,15,17]),z2=rnd([45,51,57]),n1=rnd([2000,3000]),i=z2/z1,n2=n1/i;return{q:`Antriebsrad ${z1} Zähne, Abtriebsrad ${z2} Zähne, Antriebsdrehzahl ${n1} 1/min. Wie groß ist die Abtriebsdrehzahl?`,a:n2,u:'1/min',d:0,s:`i = z2 / z1 = ${z2} / ${z1} = ${fmt(i,3)}<br>n2 = n1 / i = ${n1} / ${fmt(i,3)} = <b>${fmt(n2,0)} 1/min</b>`}},
+ ()=>{const l=rnd([42,48,55,63]),km=rnd([650,720,800]),v=l/km*100;return{q:`Ein Fahrzeug verbraucht auf ${km} km insgesamt ${l} Liter. Wie hoch ist der Verbrauch in l/100 km?`,a:v,u:'l/100 km',d:1,s:`${l} l / ${km} km · 100 = <b>${fmt(v,1)} l/100 km</b>`}},
+ ()=>{const p=rnd([2.2,2.4,2.5]),A=rnd([12,15,20]),F=p*10*A;return{q:`Bremsdruck ${fmt(p,1)} MPa wirkt auf einen Bremskolben mit ${A} cm² Fläche. Wie groß ist die Kolbenkraft in N? (1 MPa = 100 N/cm²)`,a:p*100*A,u:'N',d:0,s:`F = p · A = ${fmt(p*100,0)} N/cm² · ${A} cm² = <b>${fmt(p*100*A,0)} N</b>`}}];
+CALC.forEach(f=>f.tag='el');CALCK.forEach(f=>f.tag='mech');const ALLCALC=[...CALC,...CALCK];
+const genCalcT=t=>{const pool=t?ALLCALC.filter(f=>f.tag===t):ALLCALC;const c=rnd(pool)();c.d=c.d??2;return c};
+const FACH=[
+ ['Wie bist du bei der Fehlersuche vorgegangen?','Beanstandung nachvollzogen → Gemeinsamkeiten gesucht (Sicherung, Masse, Relais) → Stromlaufplan gelesen → am Verbraucher gemessen (+ und − gegen Masse) → Richtung Quelle weitergemessen → Fehler eingegrenzt → behoben → Funktion geprüft.'],
+ ['Warum misst du den Spannungsfall unter Last?','Ohne Strom gibt es keinen Spannungsfall. Ein Übergangswiderstand zeigt sich nur, wenn der Verbraucher eingeschaltet ist.'],
+ ['Woran erkennst du eine unterbrochene Masse am Verbraucher?','Beide Anschlüsse haben Bordspannung gegen Masse. Über dem Verbraucher fällt nichts ab, weil kein Strom fließt.'],
+ ['Warum werden Fernlicht und Lüfter über Relais geschaltet?','Der Schalter führt nur den kleinen Steuerstrom. Der große Laststrom läuft über kurze, dicke Leitungen direkt von Kl. 30 – weniger Spannungsfall, längere Lebensdauer.'],
+ ['Was machst du, wenn eine Sicherung sofort wieder auslöst?','Nicht stärker absichern. Verbraucher abklemmen, Stromkreis abschnittsweise prüfen, Masseschluss/Scheuerstelle suchen.'],
+ ['Wie erklärst du dem Kunden die Reparatur?','Verständlich ohne Fachchinesisch: Was war defekt, warum, was wurde gemacht, was hat es gekostet, worauf er achten soll.'],
+ ['Welche Sicherheitsregeln gelten vor Arbeiten an HV-Fahrzeugen?','Nur mit Qualifikation. Fahrzeug durch fachkundige Person freischalten, gegen Wiedereinschalten sichern, Spannungsfreiheit feststellen, kennzeichnen.'],
+ ['Warum klemmst du die Batterie Minus zuerst ab?','Rutscht das Werkzeug an die Karosserie, entsteht kein Kurzschluss, weil die Karosserie auf Minus liegt und der Minus schon getrennt ist.']];
 
 // =============== START ===============
 let statSvg=`<rect x="-400" y="-400" width="${WALLW+800}" height="${WALLH+800}" fill="#b9bdc2"/>`;
@@ -772,7 +1027,7 @@ loadEx();
 const tick=()=>{U.t+=0.1;const per=R&&R.fast?0.34:0.67,ph=(U.t%per)<per/2;let ch=ph!==U.fl;U.fl=ph;
  for(const m of['XL','XR']){const pw=R&&R.v(m+'.56b')>9;const nx=pw?Math.min(1,st.xen[m]+0.12):0;if(nx!==st.xen[m]){st.xen[m]=nx;ch=true}
   const tgt=R&&R.lin[m].pow&&R.lin[m].link?-(st.lr-st.lf)*1.2:(R&&R.lin[m].pow?st.ang[m]:st.ang[m]);if(Math.abs(tgt-st.ang[m])>0.01){st.ang[m]+=Math.sign(tgt-st.ang[m])*Math.min(0.3,Math.abs(tgt-st.ang[m]));ch=true}}
- if(ch&&(U.tab==='wand'||U.tab==='fehler')){refresh()}};
+ if(ch&&(U.tab==='wand'||U.tab==='fehler'||U.tab==='mess')){refresh()}};
 requestAnimationFrame(()=>{fit();full();setInterval(tick,100)});
 window.addEventListener('resize',()=>{});
 }
