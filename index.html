@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Kfz-Lernwand digital</title>
+<meta name="theme-color" content="#f2c200">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <style>
 /* VOICE: Ausbildungswerkstatt – sachlich, präzise, wie der echte Laborstand
    IDEA: ein Kfz-Elektrik-Laborstand, Baugruppe für Baugruppe
@@ -72,41 +76,52 @@ table{border-collapse:collapse;width:100%;font-size:15px}td,th{border-bottom:1px
 .tag{display:inline-block;font:700 15px "Barlow Condensed","Arial Narrow",system-ui,sans-serif;background:var(--acc);color:var(--accInk);border-radius:6px;padding:1px 7px;white-space:nowrap}
 .fault{border:2px solid var(--bad)}
 @media(max-width:600px){.stack thead{display:none}.stack tr{display:grid;padding:6px 0;border-bottom:1px solid var(--line)}.stack td{border:0;padding:1px 0;font-size:14px}.stack td[data-l]::before{content:attr(data-l) ': ';color:var(--mut)}.stack td:empty{display:none}}
+@keyframes wipe{0%,100%{transform:rotate(0)}50%{transform:rotate(-70deg)}}.wipe{animation:wipe 1.2s ease-in-out infinite}.wipe2{animation:wipe .6s ease-in-out infinite}
+@media(min-width:1100px){.layout{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:14px;align-items:start}.wallbox{position:sticky;top:8px;height:calc(100vh - 150px);min-height:560px}.sidecol .grid{grid-template-columns:minmax(0,1fr);margin-top:0}.sidecol{max-height:calc(100vh - 150px);overflow:auto;padding-right:4px;position:sticky;top:8px}}
+@media(max-width:640px){#side{order:-1}.wallbox{height:62vh}header{padding-top:8px}h1{font-size:24px}header p{display:none}.tools button,.tools select{min-height:40px;padding:6px 10px;font-size:14px}main{padding-bottom:110px}.card{padding:10px 12px}}
+@media(min-width:641px) and (max-width:1099px){.wallbox{height:64vh}}
+textarea,input{max-width:100%}
 @keyframes pulse{50%{opacity:.25}}.pulse{animation:pulse .9s infinite}
 @media(prefers-reduced-motion:reduce){.pulse{animation:none}}
 </style>
 </head>
 <body>
 <header><div><h1>Kfz-Lernwand digital</h1><p>Virtueller Kfz-Elektrik-Laborstand: stecken, schalten, messen, Fehler finden.</p></div></header>
-<nav id="tabs"><button data-tab="wand" class="on">Lernwand</button><button data-tab="fehler">Fehlersuche</button><button data-tab="aufg">Aufgaben</button><button data-tab="quiz">Quiz</button><button data-tab="wissen">Wissen</button></nav>
+<nav id="tabs"><button data-tab="wand" class="on">Lernwand</button><button data-tab="fehler">Fehlersuche</button><button data-tab="aufg">Aufgaben</button><button data-tab="quiz">Lernen</button><button data-tab="wissen">Wissen</button></nav>
 <main>
 <section id="v-wand">
  <div id="faultCard" class="card fault hidden"></div>
  <div class="tools" id="tools">
   <button data-mode="plug" class="on">Stecken</button><button data-mode="meas">Messen</button><button data-mode="info">Info</button><button data-mode="report" class="red hidden" id="repBtn">Fehler melden</button>
   <span class="cols" id="colors"></span><span class="sp"></span>
-  <select id="goto" style="width:auto"><option value="">Zu Baugruppe …</option></select>
+  <button data-act="plan" id="planBtn">Plan</button><select id="goto" style="width:auto"><option value="">Zu Baugruppe …</option></select>
  </div>
+ <div class="layout">
  <div class="wallbox" id="wallbox">
   <svg id="wall" xmlns="http://www.w3.org/2000/svg"><g id="stat"></g><g id="dyn"></g></svg>
   <div class="zoom"><button id="zin" aria-label="Vergrößern">+</button><button id="zout" aria-label="Verkleinern">−</button><button id="zfit" aria-label="Ganze Wand" style="font-size:13px">alles</button></div>
   <div class="status" id="status"></div>
  </div>
+ <div class="sidecol">
  <div class="grid">
   <div>
    <div class="meter"><div class="lcd" id="lcd">-,--<small> V</small></div>
-    <div class="row" style="margin-top:8px"><button id="m1" class="on">Gegen Masse</button><button id="m2">2 Punkte</button></div>
+    <div class="row" style="margin-top:8px"><button id="m1" class="on">V gegen Masse</button><button id="m2">V 2 Punkte</button><button id="m3">A Kabel</button><button id="m4">Ω 2 Punkte</button><button id="m5">Oszi</button></div><div id="osc" style="margin-top:8px;display:none"></div>
     <div class="pl" id="probeInfo">Werkzeug „Messen“ wählen und eine Buchse antippen.</div></div>
    <div class="card" id="infoCard"><h3>Info</h3><p class="mut" style="margin:0">Werkzeug „Info“ wählen und eine Buchse oder ein Bauteil antippen.</p></div>
   </div>
   <div class="card" id="ctrl"></div>
   <div class="card" id="side"></div>
  </div>
+ <div class="card hidden" id="planCard"></div>
  <div class="card" id="logCard"></div>
+ </div>
+ </div>
 </section>
 <section id="v-aufg" class="hidden" style="max-width:860px"></section>
 <section id="v-quiz" class="hidden" style="max-width:720px"></section>
 <section id="v-wissen" class="hidden" style="max-width:860px">
+ <div class="card"><h3>Werte nachschlagen</h3><input id="refq" placeholder="Suchen: z. B. Sicherung, Klemme, Reifen, Formel …" style="width:100%;font:16px system-ui,sans-serif;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);margin-bottom:8px"><div id="refList" class="scroll" style="max-height:420px"></div><p class="mut">Richtwerte – im Zweifel gelten Herstellerangaben.</p></div>
  <div class="card"><h3>So arbeitest du an der Wand</h3><ol>
  <li><b>Netzteil</b> einschalten. Die Schienen 30, 15 und 31 laufen durch alle Platten (wie gebrückt).</li>
  <li><b>Kl. 15 erzeugen:</b> Am Zündstartschalter die 30-Buchse auf den Schalter-Eingang stecken und den 15-Ausgang auf die 15-Schiene.</li>
@@ -217,6 +232,14 @@ mod({id:'CB',row:3,x:490,w:440,name:'CAN Beleuchtungsinterface',code:'Baugruppe 
  S('RR58',290,248,'black','58','Ausgang 58 hinten rechts','Rücklicht rechts.'),S('RRR',325,248,'black','R','Ausgang R hinten','Blinker hinten rechts.'),S('RRRFL',290,290,'black','RFL','Ausgang RFL','Rückfahrleuchte.','b'),S('RR54',325,290,'black','54','Ausgang 54 hinten rechts','Bremslicht rechts.','b')]});
 mod({id:'CF',row:3,x:930,w:230,name:'CAN-Fehlersimulator',code:'Baugruppe 14',desc:'Schleift CAN-H und CAN-L durch (IN → OUT). Über das Schloss kann ein Busfehler eingeschaltet werden.',
  socks:[S('IH',35,130,'black','CAN-H','CAN-IN H','Eingang CAN-H.','a'),S('IL',35,180,'black','CAN-L','CAN-IN L','Eingang CAN-L.','b'),S('OH',195,130,'black','CAN-H','CAN-OUT H','Ausgang CAN-H.','a'),S('OL',195,180,'black','CAN-L','CAN-OUT L','Ausgang CAN-L.','b')]});
+mod({id:'WH',row:2,x:1350,w:450,name:'Scheibenwischer und Hupe',code:'Baugruppe 15',desc:'Hupe (ca. 3,5 Ω), Wischerschalter (0 / Intervall / Stufe 1 / Stufe 2) und Wischermotor mit zwei Stufen (53 langsam, 53b schnell). Minus intern auf 31.',
+ socks:[S('HU',60,280,'black','H+','Hupe +','Plus-Eingang der Hupe. Minus intern auf 31. Hupen werden meist über ein Relais geschaltet (hoher Strom).','b'),
+ S('W15',165,280,'black','15','Wischerschalter 15','Versorgung des Wischerschalters – über Sicherung von Kl. 15.','b'),S('W53',225,280,'black','53','Wischerschalter 53','Ausgang Stufe 1 (langsam) – im Intervall getaktet.','b'),S('W53b',285,280,'black','53b','Wischerschalter 53b','Ausgang Stufe 2 (schnell).','b'),
+ S('M53',350,280,'black','53','Wischermotor 53','Motoreingang Stufe 1 (langsam).','b'),S('M53b',410,280,'black','53b','Wischermotor 53b','Motoreingang Stufe 2 (schnell).','b')]});
+mod({id:'FH',row:3,x:1160,w:440,name:'Fensterheber mit Polwendeschalter',code:'Baugruppe 16',desc:'Fensterheberschalter (Wippe) wendet die Polarität: Auf = M1 Plus/M2 Masse, Ab = umgekehrt, Ruhe = beide auf Masse (Motor gebremst).',
+ socks:[S('S30',50,250,'red','30','Fensterheberschalter Plus','Plus-Eingang des Schalters (über Sicherung).','b'),S('S31',110,250,'brown','31','Fensterheberschalter Masse','Masse-Eingang des Schalters – auf 31 stecken.','b'),
+ S('M1',190,250,'black','M1','Schalter Ausgang M1','Ausgang 1: Plus bei „Auf“, Masse bei „Ab“.','b'),S('M2',250,250,'black','M2','Schalter Ausgang M2','Ausgang 2: Masse bei „Auf“, Plus bei „Ab“.','b'),
+ S('FM1',330,250,'black','M1','Motor M1','Motoranschluss 1.','b'),S('FM2',390,250,'black','M2','Motor M2','Motoranschluss 2. Die Drehrichtung hängt von der Polarität ab.','b')]});
 const WALLW=1800,WALLH=1700;
 
 // Lampen (für Simulation + Anzeige)
@@ -232,6 +255,8 @@ for(let i=0;i<8;i++){const p=Math.floor(i/2),x=70+p*88,up=i%2===0;L('KI:H'+(i+1)
 L('RL:54','RL.i54','RL.o54',21,'lamp','#ff2a2a',95,125,50,'Bremsleuchte links');L('RL:58','RL.i58','RL.o58',1.8,'led','#ff3b3b',95,125,50,'Rücklicht links (LED)');L('RL:LR','RL.iLR','RL.oLR',21,'lamp','#ffa21a',255,125,30,'Blinker hinten links');
 L('RR:LR','RR.iLR','RR.oLR',21,'lamp','#ffa21a',105,125,30,'Blinker hinten rechts');L('RR:58','RR.i58','RR.o58',1.8,'led','#ff3b3b',265,125,50,'Rücklicht rechts (LED)');L('RR:54','RR.i54','RR.o54',21,'lamp','#ff2a2a',265,125,50,'Bremsleuchte rechts');
 const LAMP={};LAMPS.forEach(l=>LAMP[l.id]=l);
+const LOADS=[{id:'WH:HU',a:'WH.HU',b:'GND',R:3.5,name:'Hupe'},{id:'WH:W1',a:'WH.M53',b:'GND',R:2.5,name:'Wischermotor Stufe 1'},{id:'WH:W2',a:'WH.M53b',b:'GND',R:2.0,name:'Wischermotor Stufe 2'},{id:'FH:M',a:'FH.FM1',b:'FH.FM2',R:1.5,name:'Fensterhebermotor'}];
+const LOAD={};LOADS.forEach(l=>LOAD[l.id]=l);
 
 // =============== SIMULATION ===============
 function gauss(n,el,src){
@@ -251,11 +276,11 @@ const RAILS=m=>[[m.id+'.r30a','R30'],[m.id+'.r30b','R30'],[m.id+'.r15a','R15'],[
 const STATIC=[['ZS.T1','ZS.IN30'],['ZS.T2','R30'],['ZS.T3','R15'],['ZS2.T1','ZS2.IN30'],['ZS2.T2','R30'],['ZS2.T3','R15'],['XL.t15','R15'],['XR.t15','R15'],['LV.t15','R15'],['SE.s15aL','SE.s15aR'],['SE.GL','SE.GR'],['RL.g1','GND'],['RL.g2','GND'],['RR.g1','GND'],['RR.g2','GND'],['CS.H1','CS.H2'],['CS.L1','CS.L2'],['LV.FC','GND'],['LV.RC','GND'],
  ...[1,2,3].map(i=>['SE.Fi'+i,'R15']),...[4,5,6].map(i=>['SE.Fi'+i,'R30'])];
 
-function circuit(st,cab,F,it){
+function circuit(st,cab,F,it,opt){
  const M=[...STATIC],Rs=[],Sr=[];const mg=(a,b)=>M.push([a,b]),rs=(a,b,R,id)=>Rs.push({a,b,R,id}),src=(a,U,R,id)=>Sr.push({a,U,R,id});
  const fk=F&&F.k;
  for(const m of MODS)M.push(...RAILS(m));
- for(const c of cab){if(F&&F.cable===c.id){if(F.open)continue;rs(c.a,c.b,F.r,'cab:'+c.id);continue}mg(c.a,c.b)}
+ for(const c of cab){if(opt&&opt.mc===c.id){rs(c.a,c.b,0.001,'mcab');continue}if(F&&F.cable===c.id){if(F.open)continue;rs(c.a,c.b,F.r,'cab:'+c.id);continue}mg(c.a,c.b)}
  if(st.nt&&!st.trip)src('R30',13.5,0.01,'NT');
  // Scheinwerfer
  for(const m of['XL','XR']){if(fk===m+'_gnd')rs(m+'.g','GND',3,'gnd');else mg(m+'.g','GND');
@@ -263,6 +288,9 @@ function circuit(st,cab,F,it){
   if(it.tfl[m])rs(m+'.TFL',m+'.g',144/10,'tfl:'+m);else rs(m+'.TFL',m+'.g',2000,'ecu3');}
  // Lampen
  for(const l of LAMPS){if(F&&F.lamp===l.id)continue;rs(l.a,l.b,144/l.W,'lamp:'+l.id)}
+ for(const l of LOADS){if(F&&F.load===l.id)continue;rs(l.a,l.b,l.R,'load:'+l.id)}
+ if(st.wi===3)mg('WH.W15','WH.W53b');else if(st.wi===2||(st.wi===1&&st.wiPh))mg('WH.W15','WH.W53');
+ if(st.fh===1){mg('FH.S30','FH.M1');mg('FH.S31','FH.M2')}else if(st.fh===-1){mg('FH.S30','FH.M2');mg('FH.S31','FH.M1')}else{mg('FH.S31','FH.M1');mg('FH.S31','FH.M2')}
  // Zündstartschalter
  for(const z of['ZS','ZS2']){const k=z==='ZS'?st.key:st.key2,nf=fk===z+'_15';mg(z+'.T4',z+'.O15');
   if((k===2||k===3)&&!nf)mg(z+'.IN30',z+'.O15');if(k===1||k===2)mg(z+'.IN30',z+'.O75');if(k===3)mg(z+'.IN30',z+'.O50');}
@@ -297,17 +325,17 @@ function circuit(st,cab,F,it){
 }
 const CANMAP={i56a:['FL56a','FR56a'],i56b:['FL56b','FR56b'],i58L:['FL58','RL58'],i58R:['FR58','RR58'],i54:['RL54','RR54'],iNSL:['RLNSL'],iL:['FLL','RLL'],iR:['FRR','RRR'],iRFL:['RRRFL']};
 
-function simulate(st,cab,F,flOn){
+function simulate(st,cab,F,flOn,opt){
  const it={rel:{K1:!!st.rel.K1,K2:!!st.rel.K2},tfl:{XL:false,XR:false},k3on:false,lv:false,cs:false,canOut:[]};
  const blown={...st.blown};const s2={...st,blown};let res=null,trip=false,busOK=false;
  for(let loop=0;loop<12;loop++){
-  const c=circuit(s2,cab,F,it),uf=UF();for(const[a,b]of c.M)uf.u(a,b);
+  const c=circuit(s2,cab,F,it,opt),uf=UF();for(const[a,b]of c.M)uf.u(a,b);if(opt&&opt.inj){uf.f(opt.inj[0]);uf.f(opt.inj[1])}
   for(const e of c.Rs){uf.f(e.a);uf.f(e.b)}for(const e of c.Sr)uf.f(e.a);uf.f('R30');uf.f('R15');
   const g=uf.f('GND');if(uf.f('R30')===g&&s2.nt&&!s2.trip){trip=true;s2.trip=true;continue}
   const idx=new Map();let n=0;for(const k of uf.p.keys()){const r=uf.f(k);if(r===g)continue;if(!idx.has(r))idx.set(r,n++)}
   const ix=a=>{const r=uf.f(a);return r===g?-1:idx.get(r)};
   const el=c.Rs.map(e=>({i:ix(e.a),j:ix(e.b),g:1/e.R,id:e.id,a:e.a,b:e.b})).filter(e=>e.i!==e.j);
-  const sr=c.Sr.map(e=>[ix(e.a),e.U/e.R]);for(const e of c.Sr)el.push({i:ix(e.a),j:-1,g:1/e.R,id:'src:'+e.id});
+  const sr=c.Sr.map(e=>[ix(e.a),e.U/e.R]);if(opt&&opt.inj){sr.push([ix(opt.inj[0]),0.001],[ix(opt.inj[1]),-0.001])}for(const e of c.Sr)el.push({i:ix(e.a),j:-1,g:1/e.R,id:'src:'+e.id});
   const V=gauss(n,el,sr);const v=a=>{if(!uf.p.has(a))return 0;const i=ix(a);return i<0?0:V[i]};
   const same=(a,b)=>uf.p.has(a)&&uf.p.has(b)&&uf.f(a)===uf.f(b);
   let ch=false;
@@ -329,7 +357,8 @@ function simulate(st,cab,F,flOn){
    let k3I=0;for(const e of el)if(e.id==='k3')k3I=Math.abs((v(e.a)-v(e.b))*e.g);
    const tflBr={XL:it.tfl.XL?1:0,XR:it.tfl.XR?1:0};
    const lin={};for(const m of['XL','XR'])lin[m]={pow:v(m+'.E15')>9,link:it.lv&&same(m+'.LIN','LV.LIN')};
-   return{v,same,br,blown,trip,rel:it.rel,k3p,k3I,fast:k3p&&flOn&&k3I<2.6,tfl:tflBr,lin,busOK,canOut:it.canOut,lv:it.lv,cs:it.cs};
+   const ld={};for(const l of LOADS)ld[l.id]=v(l.a)-v(l.b);let mcI=0;for(const e of el)if(e.id==='mcab')mcI=(v(e.a)-v(e.b))*e.g;
+   return{ld,mcI,v,same,br,blown,trip,rel:it.rel,k3p,k3I,fast:k3p&&flOn&&k3I<2.6,tfl:tflBr,lin,busOK,canOut:it.canOut,lv:it.lv,cs:it.cs};
   }
  }
 }
@@ -346,9 +375,10 @@ const BREMS=[['SE.Fo2','SE.B1i'],['SE.B1o','RL.i54'],['SE.B1o','RR.i54'],['RL.o5
 const TFL=[['SE.Fo3','XL.TFL'],['SE.Fo3','XR.TFL']];
 const LWR=[['LV.t15','LV.E15'],['XL.t15','XL.E15'],['XR.t15','XR.E15'],['LV.LIN','XL.LIN'],['LV.LIN','XR.LIN']];
 const CAN=[['ZS2.T2','ZS2.T1'],['ZS2.T4','ZS2.T3'],['SE.Fo4','SE.LS30'],['SE.LS58L','CS.i58L'],['SE.LS58R','CS.i58R'],['SE.Fo2','SE.B1i'],['SE.B1o','CS.i54'],['CS.H1','CF.IH'],['CS.L1','CF.IL'],['CF.OH','CB.H'],['CF.OL','CB.L'],['CB.RL58','RL.i58'],['CB.RR58','RR.i58'],['CB.RL54','RL.i54'],['CB.RR54','RR.i54'],['RL.o58','RL.g1'],['RL.o54','RL.g1'],['RR.o58','RR.g1'],['RR.o54','RR.g1']];
+const runOn=(...ids)=>r=>ids.filter(i=>Math.abs(r.ld[i]||0)<9).map(i=>`${LOAD[i].name} läuft nicht`);const runOff=(...ids)=>r=>ids.filter(i=>Math.abs(r.ld[i]||0)>2).map(i=>`${LOAD[i].name} läuft, soll aber aus sein`);
 const on=(...ids)=>r=>ids.filter(i=>(r.br[i]||0)<0.6).map(i=>`${LAMP[i].name} leuchtet nicht${(r.br[i]||0)>0.05?' richtig (zu schwach)':''}`);
 const off=(...ids)=>r=>ids.filter(i=>(r.br[i]||0)>0.1).map(i=>`${LAMP[i].name} leuchtet, soll aber aus sein`);
-const C0={key:0,key2:0,ls:0,nebel:0,fern:false,hupe:false,lever:0,warn:false,brake:false,s2:false,s3:false,lwr:0,lf:0,lr:0};
+const C0={wi:0,fh:0,wiPh:false,key:0,key2:0,ls:0,nebel:0,fern:false,hupe:false,lever:0,warn:false,brake:false,s2:false,s3:false,lwr:0,lf:0,lr:0};
 const EX=[
  {id:'u1',t:'1 · Spannungsversorgung & Klemme 15',sol:P1,goal:'Netzteil einschalten. Am Zündstartschalter die Klemme 30 auf den Schaltereingang brücken und den Ausgang 15 auf die 15-Schiene. Dann führt die 15-Schiene nur bei Zündung Spannung.',
   tests:[[{key:2},r=>r.v('R15')>12?[]:['15-Schiene hat bei Zündung an keine Spannung']],[{key:0},r=>r.v('R15')<1?[]:['15-Schiene hat bei Zündung aus Spannung – 15 darf nicht mit 30 verbunden sein']]]},
@@ -368,6 +398,12 @@ const EX=[
   tests:[[{key:2,lr:4},r=>[r.lin.XL.pow&&r.lin.XL.link?'':'Scheinwerfer links regelt nicht (Versorgung/LIN prüfen)',r.lin.XR.pow&&r.lin.XR.link?'':'Scheinwerfer rechts regelt nicht'].filter(Boolean)]]},
  {id:'u9',t:'9 · CAN-Bus Beleuchtung',sol:CAN,goal:'Zweiten Zündstartschalter auf die 15-Schiene. Lichtschalter 58L/58R und Bremslichtschalter auf die Eingänge des CAN-Schaltinterfaces. CAN-H/L über den Fehlersimulator zum Beleuchtungsinterface. Dessen Ausgänge 58 und 54 zu den Rückleuchten.',
   tests:[[{key2:2,ls:1},r=>[...(r.busOK?[]:['CAN-Bus funktioniert nicht (H/L vertauscht oder offen?)']),...on('RL:58','RR:58')(r)]],[{key2:2,brake:true},on('RL:54','RR:54')],[{key2:2},off('RL:58','RR:58','RL:54','RR:54')]]},
+ {id:'u10',t:'10 · Hupe über Relais K1',sol:[...P1,['SE.Fo2','SE.B2i'],['SE.B2o','RE.K1_86'],['RE.K1_85','RE.r31a'],['RE.r30a','ZS.Z7i'],['ZS.Z7o','RE.K1_30'],['RE.K1_87','WH.HU']],goal:'Taster S2 ist der Hupentaster. Er wird über F2 (15) versorgt und schaltet nur die Spule von K1 (85 auf Masse). Der Hupenstrom kommt von 30 über Sicherung Z7 auf K1/30 und über 87 zur Hupe.',
+  tests:[[{key:2,s2:true},r=>[...runOn('WH:HU')(r),...(r.rel.K1?[]:['Relais K1 zieht nicht an – Hupe soll über das Relais laufen'])]],[{key:2},runOff('WH:HU')]]},
+ {id:'u11',t:'11 · Scheibenwischer 2 Stufen + Intervall',sol:[...P1,['SE.Fo3','WH.W15'],['WH.W53','WH.M53'],['WH.W53b','WH.M53b']],goal:'Wischerschalter 15 über F3 (Kl. 15) versorgen. Ausgang 53 (Stufe 1, Intervall) zum Motor 53, Ausgang 53b (Stufe 2) zum Motor 53b.',
+  tests:[[{key:2,wi:2},runOn('WH:W1')],[{key:2,wi:3},runOn('WH:W2')],[{key:0,wi:2},runOff('WH:W1')]]},
+ {id:'u12',t:'12 · Fensterheber (Polwendeschaltung)',sol:[...P1,['SE.Fo1','FH.S30'],['FH.S31','FH.r31a'],['FH.M1','FH.FM1'],['FH.M2','FH.FM2']],goal:'Schalter-Plus über F1 (15), Schalter-Masse auf 31. M1 und M2 zum Motor. Bei „Auf“ muss der Motor andersherum drehen als bei „Ab“ – das macht der Schalter durch Umpolen.',
+  tests:[[{key:2,fh:1},r=>r.ld['FH:M']>9?[]:['Fenster fährt bei „Auf“ nicht hoch']],[{key:2,fh:-1},r=>r.ld['FH:M']<-9?[]:['Fenster fährt bei „Ab“ nicht runter']],[{key:2},r=>Math.abs(r.ld['FH:M'])<1?[]:['Motor läuft, obwohl der Schalter in Ruhe ist']]]},
  {id:'free',t:'Freies Arbeiten',sol:[],goal:'Alle Baugruppen frei verdrahten und messen – ohne Prüfung.',tests:[]}
 ];
 const MASTER=(()=>{const all=[...P1,...LSF,...STAND,...ABBL,...FERNK2,...BLINK,...BREMS,...TFL,...LWR],seen=new Set(),out=[];for(const[a,b]of all){const k=[a,b].sort().join('|');if(!seen.has(k)){seen.add(k);out.push([a,b])}}return out})();
@@ -410,7 +446,7 @@ function symptoms(cab,F){const out=[];for(const[n,c,ids,blink,tfl,lwr]of SYM){co
  return out}
 
 // =============== ZUSTAND ===============
-const fresh=()=>({...C0,nt:true,trip:false,blown:{},rel:{},ang:{XL:0,XR:0},xen:{XL:0,XR:0}});
+const fresh=()=>({...C0,nt:true,trip:false,blown:{},rel:{},ang:{XL:0,XR:0},xen:{XL:0,XR:0},win:50});
 let st=fresh();
 const U={tab:'wand',ex:store.get('ex',0),mode:'plug',color:'black',pend:null,mm:'gnd',pr:null,pb:null,cabs:[],hist:[],cnt:1,lock:null,fault:null,fmsg:null,meas:0,guess:0,solved:false,hl:null,msg:'',phase:0,fl:false,t:0,last:null,lastSig:'',checkMsg:null,status:''};
 if(U.ex>=EX.length)U.ex=0;
@@ -488,6 +524,11 @@ const DRAW={
   for(let i=0;i<9;i++)s+=ln([[44,72+i*26],[92,100+i*20]],1);s+=ln([[172,150],[205,130]])+ln([[172,170],[205,170]]);return s},
  CB:m=>{let s=`<path d="M150 60 Q220 40 290 60 L310 150 L310 280 Q220 320 130 280 L130 150 Z" fill="none" stroke="#9aa0a6" stroke-width="2"/><rect x="185" y="150" width="70" height="56" rx="6" fill="#d9dbdd"/>`+T(220,175,'Verarbeitung','font-size="9" text-anchor="middle"')+T(220,190,'Processing','font-size="9" text-anchor="middle"');
   s+=ln([[55,163],[185,178]],2.5)+ln([[255,178],[300,178]],2.5);return s},
+ WH:m=>{let s=`<rect x="20" y="70" width="80" height="150" rx="6" fill="#d9dbdd"/><path d="M40 130 h18 l18 -26 v74 l-18 -26 h-18z" fill="#1d1d1f" data-p="WH:HU"/>`+T(60,232,'Hupe 3,5 Ω','font-size="10" text-anchor="middle"')+ln([[60,269],[60,226]])+ln([[60,226],[60,226]]);
+  s+=`<g data-c="wi"><circle cx="225" cy="150" r="40" fill="#1d1d1f"/><text x="225" y="104" text-anchor="middle" font-size="10">0 · J · 1 · 2</text></g>`+ln([[165,269],[165,240],[200,240]])+ln([[225,269],[225,195]])+ln([[285,269],[285,240],[250,240]]);
+  s+=`<rect x="320" y="70" width="110" height="150" rx="6" fill="#cfe0ea" data-p="WH:W1"/><circle cx="375" cy="205" r="14" fill="#1d1d1f"/><text x="375" y="210" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">M</text>`+ln([[350,269],[350,226],[365,215]])+ln([[410,269],[410,226],[385,215]]);return s},
+ FH:m=>{let s=`<rect x="300" y="64" width="120" height="150" rx="8" fill="#d9dbdd" stroke="#8a8f94"/><circle cx="360" cy="190" r="14" fill="#1d1d1f" data-p="FH:M"/><text x="360" y="195" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">M</text>`;
+  s+=`<g data-c="fh"><rect x="120" y="80" width="80" height="110" rx="10" fill="#1d1d1f"/><text x="160" y="104" text-anchor="middle" fill="#fff" font-size="16">▲</text><text x="160" y="178" text-anchor="middle" fill="#fff" font-size="16">▼</text></g>`+ln([[50,239],[50,210],[140,200]])+ln([[110,239],[110,215],[150,200]])+ln([[190,239],[190,215],[170,200]])+ln([[250,239],[250,215],[180,200]])+ln([[330,239],[330,205],[350,198]])+ln([[390,239],[390,205],[370,198]]);return s},
  CF:m=>{let s=lock('CF',115,180)+ln([[50,130],[100,130]])+ln([[50,180],[80,180]])+ln([[130,130],[180,130]])+ln([[150,180],[180,180]]);return s}
 };
 const y31=m=>m.y31;
@@ -551,6 +592,13 @@ function drawDyn(){
  s+=`<g data-c="s2"><circle cx="${SE.x+915}" cy="${SE.y+300}" r="13" fill="${st.s2?'#bdbdbd':'#fff'}" stroke="#333" stroke-width="3"/></g><g data-c="s3"><circle cx="${SE.x+945}" cy="${SE.y+300}" r="13" fill="${st.s3?'#bdbdbd':'#fff'}" stroke="#333" stroke-width="3"/></g>`;
  
  if(st.brake)s+=`<text x="${SE.x+860}" y="${SE.y+215}" text-anchor="end" font-size="10" font-weight="700" fill="#c62828">gedrückt</text>`;
+ // Wischer/Hupe/Fensterheber
+ {const W=MOD.WH,ld=R.ld||{};const sp=Math.abs(ld['WH:W2']||0)>9?2:Math.abs(ld['WH:W1']||0)>9?1:0;
+  s+=`<g transform="translate(${W.x+340},${W.y+200})"><g class="${sp===2?'wipe2':sp===1?'wipe':''}" style="transform-origin:0 0"><line x1="0" y1="0" x2="80" y2="-110" stroke="#1d1d1f" stroke-width="5" stroke-linecap="round"/></g></g>`;
+  s+=`<g transform="translate(${W.x+225},${W.y+150}) rotate(${[-60,-20,20,60][st.wi]})" data-c="wi"><rect x="-4" y="-36" width="8" height="30" rx="3" fill="#fff"/></g><text x="${W.x+225}" y="${W.y+218}" text-anchor="middle" font-size="11" font-weight="700" fill="#c62828">${['Aus','Intervall','Stufe 1','Stufe 2'][st.wi]}</text>`;
+  if(Math.abs(ld['WH:HU']||0)>9)s+=`<g fill="none" stroke="#f2c200" stroke-width="3"><path d="M${W.x+82} ${W.y+120} q14 22 0 44"/><path d="M${W.x+92} ${W.y+110} q22 32 0 64"/></g>`;
+  const F_=MOD.FH,wy=F_.y+70+ (100-st.win)*1.2;s+=`<rect x="${F_.x+20}" y="${F_.y+64}" width="86" height="150" rx="6" fill="#ececea" stroke="#555" stroke-width="3"/><rect x="${F_.x+25}" y="${wy}" width="76" height="${F_.y+210-wy}" fill="#8fc3e8" opacity=".75"/><text x="${F_.x+63}" y="${F_.y+232}" text-anchor="middle" font-size="10">Fenster ${Math.round(st.win)} %</text>`;
+  s+=`<text x="${F_.x+160}" y="${F_.y+140}" text-anchor="middle" font-size="12" font-weight="700" fill="#f2c200">${st.fh===1?'AUF':st.fh===-1?'AB':'·'}</text>`;}
  // Netzteil
  const N=MOD.NT;s+=`<circle cx="${N.x+67}" cy="${N.y+262}" r="6" fill="${st.nt&&!st.trip?'#3ee07a':'#333'}"/>${st.trip?`<text x="${N.x+180}" y="${N.y+250}" text-anchor="middle" font-size="13" font-weight="700" fill="#d23b2b">ÜBERLAST – RESET</text>`:''}${!st.nt?`<rect x="${N.x+56}" y="${N.y+282}" width="22" height="32" rx="3" fill="#444"/>`:''}`;
  // LV Auto
@@ -580,14 +628,21 @@ function zoomAt(f,cx,cy){const r=svg.getBoundingClientRect();if(cx===undefined){
 function goMod(id){const m=MOD[id],r=svg.getBoundingClientRect(),ar=r.width/r.height;let w=m.w+40,h=m.h+40;if(w/h<ar)w=h*ar;else h=w/ar;VB={x:m.x+m.w/2-w/2,y:m.y+m.h/2-h/2,w,h};setVB()}
 function focusSocks(ids){const ss=ids.map(i=>SOCK[i]);const x0=Math.min(...ss.map(s=>s.X))-120,x1=Math.max(...ss.map(s=>s.X))+120,y0=Math.min(...ss.map(s=>s.Y))-120,y1=Math.max(...ss.map(s=>s.Y))+160;const r=svg.getBoundingClientRect(),ar=r.width/r.height;let w=x1-x0,h=y1-y0;if(w/h<ar)w=h*ar;else h=w/ar;VB={x:(x0+x1)/2-w/2,y:(y0+y1)/2-h/2,w,h};setVB()}
 const ptrs=new Map();let pan=null,pinch=null;
-svg.addEventListener('pointerdown',e=>{svg.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+function startPinch(){const[a,b]=[...ptrs.values()];pinch={d:Math.max(10,Math.hypot(a.x-b.x,a.y-b.y)),vb:{...VB},cx:(a.x+b.x)/2,cy:(a.y+b.y)/2};pan=null}
+svg.addEventListener('pointerdown',e=>{try{svg.setPointerCapture(e.pointerId)}catch(_){}ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
  if(ptrs.size===1){let t=null;for(const el of document.elementsFromPoint(e.clientX,e.clientY)){const x=el.closest&&el.closest('[data-s]');if(x){t=x;break}}if(!t)t=e.target.closest('[data-s],[data-w],[data-c],[data-p]');pan={x:e.clientX,y:e.clientY,vb:{...VB},moved:false,t:t?{...t.dataset}:null}}
- else if(ptrs.size===2){const[a,b]=[...ptrs.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y),vb:{...VB},cx:(a.x+b.x)/2,cy:(a.y+b.y)/2};if(pan)pan.moved=true}});
+ else if(ptrs.size===2)startPinch()});
 svg.addEventListener('pointermove',e=>{if(!ptrs.has(e.pointerId))return;ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});const r=svg.getBoundingClientRect();
- if(pinch&&ptrs.size===2){const[a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);VB={...pinch.vb};zoomAt(pinch.d/d,pinch.cx,pinch.cy);return}
+ if(pinch&&ptrs.size>=2){const[a,b]=[...ptrs.values()];const d=Math.max(10,Math.hypot(a.x-b.x,a.y-b.y)),cx=(a.x+b.x)/2,cy=(a.y+b.y)/2;const P=pinch.vb;
+  const k=Math.max(220/P.w,Math.min(4000/P.w,pinch.d/d));const wx=P.x+(pinch.cx-r.left)/r.width*P.w,wy=P.y+(pinch.cy-r.top)/r.height*P.h;const nw=P.w*k,nh=P.h*k;
+  VB={x:wx-(cx-r.left)/r.width*nw,y:wy-(cy-r.top)/r.height*nh,w:nw,h:nh};setVB();return}
  if(pan){const dx=e.clientX-pan.x,dy=e.clientY-pan.y;if(Math.hypot(dx,dy)>7)pan.moved=true;if(pan.moved){VB.x=pan.vb.x-dx/r.width*VB.w;VB.y=pan.vb.y-dy/r.height*VB.h;setVB()}}});
-const endP=e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=null;if(ptrs.size===0&&pan){if(!pan.moved&&pan.t)tap(pan.t);pan=null}};
-svg.addEventListener('pointerup',endP);svg.addEventListener('pointercancel',e=>{ptrs.delete(e.pointerId);pan=null;pinch=null});
+const endP=e=>{const wasPinch=!!pinch;ptrs.delete(e.pointerId);
+ if(ptrs.size>=2){startPinch();return}
+ if(ptrs.size===1){pinch=null;const[q]=[...ptrs.values()];pan={x:q.x,y:q.y,vb:{...VB},moved:true,t:null};return}
+ pinch=null;if(pan&&!pan.moved&&pan.t&&!wasPinch)tap(pan.t);pan=null};
+svg.addEventListener('pointerup',endP);svg.addEventListener('pointercancel',endP);
+document.addEventListener('gesturestart',e=>e.preventDefault());
 svg.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.deltaY>0?1.15:0.87,e.clientX,e.clientY)},{passive:false});
 $('zin').onclick=()=>zoomAt(0.7);$('zout').onclick=()=>zoomAt(1.4);$('zfit').onclick=fit;
 $('goto').innerHTML+=MODS.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');$('goto').onchange=e=>{if(e.target.value)goMod(e.target.value);e.target.value=''};
@@ -600,8 +655,9 @@ function tap(d){
   if(U.mode==='plug'){if(fixed()){U.status='Hier ist die Verdrahtung fest – nur messen und bedienen.';refresh();return}
    if(!U.pend)U.pend=id;else if(U.pend===id)U.pend=null;else{const c={id:'c'+(U.cnt++),a:U.pend,b:id,c:U.color};U.cabs.push(c);U.hist.push(['add',c]);U.pend=null;save();U.checkMsg=null;const j=U.learn?judge(c):null;addLog('Gesteckt',sn(c.a),sn(c.b),j?j.v:'',j?(j.ok===true?'ok':j.ok===false?'bad':''):'');learnShow(c,j)}
    U.hl=null;full();return}
-  if(U.mode==='meas'){if(U.mm==='gnd')U.pr=id;else{if(!U.pr||U.pb){U.pr=id;U.pb=null}else U.pb=id}if(U.tab==='fehler')U.meas++;refresh();if(U.mm==='gnd'||U.pb)addLog('Gemessen',sn(U.pr),U.mm==='gnd'?'Masse':sn(U.pb),fmt(R.v(U.pr)-(U.mm==='gnd'?0:R.v(U.pb)))+' V');return}
+  if(U.mode==='meas'){if(U.mm==='amp'){U.status='Für Strom ein Kabel antippen, nicht die Buchse.';refresh();return}if(U.mm==='gnd')U.pr=id;else{if(!U.pr||U.pb){U.pr=id;U.pb=null}else U.pb=id}U.osc=[];if(U.tab==='fehler')U.meas++;refresh();if(U.mm==='gnd'||U.pb)addLog('Gemessen',sn(U.pr),U.mm==='gnd'?'Masse':sn(U.pb),$('lcd').textContent.replace(/\s+/g,' ').trim());return}
   if(U.mode==='info'){info('sock',id);return}}
+ if(d.w&&U.mode==='meas'&&U.mm==='amp'){U.acab=d.w;if(U.tab==='fehler')U.meas++;refresh();const c=cab().find(c=>c.id===d.w);addLog('Gemessen','Strom',c?sn(c.a)+' ↔ '+sn(c.b):'',fmt(U.aI||0)+' A');return}
  if(d.w){if(U.mode==='plug'&&U.tab==='wand'){const i=U.cabs.findIndex(c=>c.id===d.w);if(i>=0){const c=U.cabs[i];U.hist.push(['del',c]);U.cabs.splice(i,1);save();U.checkMsg=null;addLog('Gelöscht',sn(c.a),sn(c.b),'Kabel abgezogen');full()}return}
   if(U.mode==='info'){const c=cab().find(c=>c.id===d.w);if(c)info('cab',c);return}}
  if(d.p&&U.mode==='info'){info('part',d.p);return}
@@ -609,6 +665,7 @@ function tap(d){
 function control(c){
  const[k,a]=c.split(':');
  if(k==='key'){if(a==='ZS')st.key=st.key>=2?0:st.key+1;else st.key2=st.key2>=2?0:st.key2+1}
+ else if(k==='wi')st.wi=(st.wi+1)%4;else if(k==='fh')st.fh=st.fh===0?1:st.fh===1?-1:0;
  else if(k==='ls')st.ls=(st.ls+1)%3;else if(k==='lwr')st.lwr=(st.lwr+1)%6;else if(k==='lever')st.lever=st.lever===0?-1:st.lever===-1?1:0;
  else if(k==='warn')st.warn=!st.warn;else if(k==='brake')st.brake=!st.brake;else if(k==='s2')st.s2=!st.s2;else if(k==='s3')st.s3=!st.s3;
  else if(k==='lf-')st.lf=Math.max(0,st.lf-1);else if(k==='lf+')st.lf=Math.min(4,st.lf+1);else if(k==='lr-')st.lr=Math.max(0,st.lr-1);else if(k==='lr+')st.lr=Math.min(4,st.lr+1);
@@ -636,10 +693,12 @@ function info(kind,x){let h='';
   else if(p.startsWith('RE.K')){const k=p.slice(3);h=`<h3>Relais ${k}</h3><p style="margin:0">${k==='K3'?'Elektronischer Blinkgeber: braucht Plus an 49 und Masse an 31. Gibt an 49a und C2 Impulse aus.':k==='K1'?'Wechsler: Spule 86/85. Stromlos 30→87a, angezogen 30→87.':'Zwei Arbeitskontakte: Spule 86/85. Angezogen 88→88a und 88→88b.'}</p><p class="mut">Zustand: ${k==='K3'?(R.k3p?'arbeitet':'aus'):(st.rel[k]?'angezogen':'abgefallen')}</p>`}
   else h=`<h3>${esc(p)}</h3>`}
  $('infoCard').innerHTML=h}
-function drawMeter(){let val='-,--',inf='';
- if(U.mm==='gnd'){if(U.pr){val=R.v(U.pr).toFixed(2).replace('.',',');inf=`Rot: ${SOCK[U.pr].n} (${MOD[SOCK[U.pr].m].code}) · Schwarz: Masse`}else inf='Werkzeug „Messen“ wählen und eine Buchse antippen.'}
- else{if(U.pr&&U.pb)val=(R.v(U.pr)-R.v(U.pb)).toFixed(2).replace('.',',');inf=`Rot: ${U.pr?SOCK[U.pr].n:'–'} · Schwarz: ${U.pb?SOCK[U.pb].n:'–'}`}
- $('lcd').innerHTML=`${val}<small> V</small>`;$('probeInfo').textContent=inf;$('m1').classList.toggle('on',U.mm==='gnd');$('m2').classList.toggle('on',U.mm==='drop')}
+function drawMeter(){let val='-,--',unit='V',inf='';const nm=id=>SOCK[id].n+' · '+SHORT[SOCK[id].m];
+ if(U.mm==='gnd'){if(U.pr){val=fmt(R.v(U.pr));inf=`Rot: ${nm(U.pr)} · Schwarz: Masse`}else inf='Werkzeug „Messen“ wählen und eine Buchse antippen.'}
+ else if(U.mm==='drop'){if(U.pr&&U.pb)val=fmt(R.v(U.pr)-R.v(U.pb));inf=`Rot: ${U.pr?nm(U.pr):'–'} · Schwarz: ${U.pb?nm(U.pb):'–'}`}
+ else if(U.mm==='amp'){unit='A';const c=U.acab&&cab().find(c=>c.id===U.acab);if(c){val=fmt(U.aI||0);inf=`Strom durch das Kabel ${nm(c.a)} ↔ ${nm(c.b)} (Messgerät in Reihe bzw. Stromzange). Plus = Strom fließt von der ersten zur zweiten Buchse.`}else inf='Strommessung: ein Kabel antippen (nicht die Buchse). Echt: Kabel abziehen und das Messgerät dazwischen in Reihe schalten, A-Buchse benutzen!'}
+ else{unit='Ω';if(st.nt&&!st.trip){val='----';inf='Ohmmessung nur stromlos! Netzteil ausschalten – unter Spannung kann das Messgerät beschädigt werden.'}else if(U.pr&&U.pb){const r_=ohm(U.pr,U.pb);val=!isFinite(r_)||r_>1e6?'OL':r_<0.05?'0,00':fmt(r_,r_<10?2:1);inf=`Widerstand zwischen ${nm(U.pr)} und ${nm(U.pb)}${val==='OL'?' – OL = offen/unterbrochen':''}`}else inf=`Rot: ${U.pr?nm(U.pr):'–'} · Schwarz: ${U.pb?nm(U.pb):'–'} – zwei Punkte antippen`}
+ $('lcd').innerHTML=`${val}<small> ${unit}</small>`;$('probeInfo').textContent=inf;['gnd','drop','amp','ohm'].forEach((m,i)=>$('m'+(i+1)).classList.toggle('on',U.mm===m));$('m5').classList.toggle('on',U.oscOn);drawOsc()}
 
 // =============== BEDIENFELD / SEITE ===============
 function drawCtrl(){
@@ -651,6 +710,7 @@ function drawCtrl(){
  <div class="grp"><b>Lenkstockschalter</b><div class="row">${B('lever',-1,'◀ Links')}${B('lever',0,'Mitte')}${B('lever',1,'Rechts ▶')}${Tg('fern','Fernlicht')}${Tg('hupe','Lichthupe')}</div></div>
  <div class="grp"><b>Schalter</b><div class="row">${Tg('warn','Warnblinker')}${Tg('brake','Bremse')}${Tg('s2','Taster S2')}${Tg('s3','Taster S3')}</div></div>
  <div class="grp"><b>Leuchtweitenregler (Hand) · Beladung</b><div class="row"><button data-act="lwr">Regler ${st.lwr}</button><button data-act="lf">vorne ${st.lf}</button><button data-act="lr">hinten ${st.lr}</button></div></div>
+ <div class="grp"><b>Wischer · Fensterheber</b><div class="seg">${B('wi',0,'Aus')}${B('wi',1,'Intervall')}${B('wi',2,'1')}${B('wi',3,'2')}</div><div class="seg" style="margin-top:5px">${B('fh',1,'▲ Auf')}${B('fh',0,'Ruhe')}${B('fh',-1,'▼ Ab')}</div></div>
  <div class="grp"><b>Zündstartschalter (CAN, unten)</b><div class="seg">${B('key2',0,'0')}${B('key2',1,'1')}${B('key2',2,'2 (15)')}</div></div>
  <div class="row"><button data-act="alloff">Alles aus</button>${Object.keys(st.blown).some(k=>st.blown[k])?'<button data-act="fuses">Sicherungen ersetzen</button>':''}</div>`}
 function connectedSet(){const uf=UF();for(const[a,b]of STATIC)uf.u(a,b);for(const m of MODS)for(const[a,b]of RAILS(m))uf.u(a,b);for(const c of cab())uf.u(c.a,c.b);uf.u('ZS.T4','ZS.O15');uf.u('ZS2.T4','ZS2.O15');return uf}
@@ -663,15 +723,15 @@ function drawSide(){let h='';
   if(U.checkMsg)h+=`<div class="msg ${U.checkMsg[0]}">${U.checkMsg[1]}</div>`;
   h+=`<div class="row" style="margin-top:8px"><button data-act="learn" class="${U.learn?'on':''}">Lernmodus ${U.learn?'an':'aus'}</button></div><p class="mut" style="margin-top:6px">Lernmodus: Bei jedem Kabel siehst du sofort, ob es richtig ist, und was die Buchsen machen. Hilfe gibt’s über die gelbe Lampe unten rechts.</p>`}
  else if(U.tab==='fehler'){h=`<h3>Fehlersuche</h3><p class="mut" style="margin:0">Die Wand ist komplett verdrahtet (Licht, Blinker, Bremse, TFL, LWR). Ein Fehler ist versteckt – im Bauteil oder in einem Kabel. Funktion prüfen, messen, dann „Fehler melden“ und das defekte Teil (Lampe, Schalter, Relais, Masse-Schiene, Kabel) antippen.</p>
-  <div class="row" style="margin-top:8px">${U.solved?'':'<button data-act="giveup">Lösung zeigen</button>'}<button class="pri" data-act="newfault">Neuer Fehler</button></div><p class="mut">Messungen: ${U.meas} · Fehlversuche: ${U.guess}</p>${U.fmsg?`<div class="msg ${U.fmsg[0]}">${U.fmsg[1]}</div>`:''}`}
+  <div class="row" style="margin-top:8px">${U.solved?'':'<button data-act="giveup">Lösung zeigen</button>'}<button class="pri" data-act="newfault">Neuer Fehler</button></div><p class="mut">Zeit <b id="ftimer">0:00</b> · Messungen: ${U.meas} · Fehlversuche: ${U.guess} · Code dieses Fehlers: <b>${U.code||''}</b></p><details><summary><b>Ausbilder-Modus / Code</b></summary><p class="mut" style="margin:6px 0">Ein Ausbilder wählt einen Fehler und gibt dir den Code. Du gibst ihn hier ein und suchst genau diesen Fehler.</p><div class="row"><input id="fcode" placeholder="Code, z. B. LW-9IX" style="font:600 16px system-ui,sans-serif;min-height:42px;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:170px"><button data-act="fload">Laden</button></div><div class="row" style="margin-top:8px"><select id="fsel" style="width:auto;max-width:100%">${FAULTS.map((f,i)=>`<option value="${i}">${f.t}</option>`).join('')}</select><button data-act="fmk">Code erzeugen</button></div>${U.mkcode?`<p style="font-size:20px;font-weight:700;margin:6px 0 0">${U.mkcode}</p>`:''}</details>${U.fmsg?`<div class="msg ${U.fmsg[0]}">${U.fmsg[1]}</div>`:''}`}
  else{const m=U.mtask;h=`<h3>Messaufgabe</h3><p style="margin:0 0 6px">Stell die Schalter wie angegeben (Bedienfeld), miss mit dem Multimeter${m.b?' im Modus „2 Punkte“':''} und gib den Wert ein.</p><div class="row"><input id="min" inputmode="decimal" placeholder="Messwert" style="font:600 18px system-ui,sans-serif;min-height:44px;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:140px"><span style="align-self:center;font-weight:700">V</span><button class="pri" data-act="mcheck">Prüfen</button></div>${m.res?`<div class="msg ${m.res[0]}">${m.res[1]}</div>`:''}<div class="row" style="margin-top:8px"><button data-act="mnew">Neue Messaufgabe</button><button data-act="maufg">Zurück zu Aufgaben</button></div>`}
  $('side').innerHTML=h;
- const fc=$('faultCard');fc.classList.toggle('hidden',U.tab==='wand');if(U.tab==='fehler')fc.innerHTML=`<h3>Beanstandung</h3><ul style="margin:0">${U.sym.map(s=>`<li>${s}</li>`).join('')}</ul>`;if(U.tab==='mess')fc.innerHTML=`<h3>Messauftrag</h3><p style="margin:0">Miss ${U.mtask.t}.</p>`;fc.style.borderColor=U.tab==='mess'?'var(--acc)':'';
+ const fc=$('faultCard');fc.classList.toggle('hidden',U.tab==='wand');if(U.tab==='fehler')fc.innerHTML=U.ka?kaHtml():`<h3>Beanstandung</h3><ul style="margin:0">${U.sym.map(s=>`<li>${s}</li>`).join('')}</ul>`;if(U.tab==='mess')fc.innerHTML=`<h3>Messauftrag</h3><p style="margin:0">Miss ${U.mtask.t}.</p>`;fc.style.borderColor=U.tab==='mess'?'var(--acc)':'';
  $('repBtn').classList.toggle('hidden',U.tab!=='fehler');document.querySelector('[data-mode="plug"]').classList.toggle('hidden',fixed());
 }
 function drawColors(){$('colors').innerHTML=U.mode==='plug'&&U.tab==='wand'?Object.entries(CCOL).map(([k,c])=>`<button class="cl ${U.color===k?'on':''}" style="background:${c}" data-col="${k}" aria-label="${k}"></button>`).join(''):'';document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===U.mode))}
-function refresh(){resim();drawDyn();drawMeter();if(U.status){U.stMsg=U.status;U.stT=Date.now()}const useMsg=U.stMsg&&Date.now()-U.stT<5000;$('status').textContent=useMsg?U.stMsg:({plug:U.pend?'Jetzt die zweite Buchse antippen.':'Stecken: zwei Buchsen nacheinander antippen. Kabel antippen = abziehen.',meas:'Messen: Buchse antippen.',info:'Info: Buchse, Bauteil oder Platte antippen.',report:'Fehler melden: defektes Bauteil oder Kabel antippen.'})[U.mode];U.status=''}
-function full(){refresh();drawCtrl();drawSide();drawColors();drawLog();if(!$('sheet').classList.contains('hidden'))drawHelp()}
+function refresh(){resim();if(U.mm==='amp'&&U.acab){const r=simulate(st,cab(),curF(),U.fl,{mc:U.acab});U.aI=r.mcI}drawDyn();drawMeter();if(U.status){U.stMsg=U.status;U.stT=Date.now()}const useMsg=U.stMsg&&Date.now()-U.stT<5000;$('status').textContent=useMsg?U.stMsg:({plug:U.pend?'Jetzt die zweite Buchse antippen.':'Stecken: zwei Buchsen nacheinander antippen. Kabel antippen = abziehen.',meas:'Messen: Buchse antippen.',info:'Info: Buchse, Bauteil oder Platte antippen.',report:'Fehler melden: defektes Bauteil oder Kabel antippen.'})[U.mode];U.status=''}
+function full(){refresh();drawCtrl();drawSide();drawColors();drawLog();drawPlan();if(!$('sheet').classList.contains('hidden'))drawHelp()}
 
 // =============== PRÜFEN ===============
 function check(){const ex=EX[U.ex];const errs=[];
@@ -716,18 +776,17 @@ function drawLog(){const L=store.get(logKey(),[]);const title=U.tab==='wand'?EX[
  $('logCard').innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><h3 style="margin:0">Protokoll – ${esc(title)}</h3><div class="row"><button data-act="logcopy">Kopieren</button><button data-act="logclear">Leeren</button></div></div>
  <p class="mut" style="margin:4px 0 8px">${L.length} Einträge · gesteckt ${cnt('Gesteckt')} · gelöscht ${cnt('Gelöscht')} · geschaltet ${cnt('Geschaltet')} · gemessen ${cnt('Gemessen')} · geprüft ${cnt('Geprüft')}</p>
  ${L.length?`<div class="scroll" style="max-height:360px;overflow:auto"><table class="stack"><thead><tr><th>Nr · Zeit</th><th style="display:none"></th><th>Aktion</th><th>Von</th><th>Nach</th><th>Ergebnis</th></tr></thead><tbody>${L.slice().reverse().map(x=>`<tr><td data-l="Nr">${x.n} · ${x.t}</td><td style="display:none"></td><td data-l="Aktion"><b style="color:${x.typ==='Gelöscht'||x.typ==='Rückgängig'?'var(--bad)':x.typ==='Gesteckt'?'var(--ok)':'inherit'}">${x.typ}</b></td><td data-l="Von">${esc(x.von)}</td><td data-l="Nach">${esc(x.nach)}</td><td data-l="Ergebnis">${x.bew==='ok'?'✓ ':x.bew==='bad'?'✗ ':''}${esc(x.info)}</td></tr>`).join('')}</tbody></table></div>`:'<p class="mut" style="margin:0">Noch keine Schritte. Alles, was du steckst, löschst, schaltest, misst und prüfst, wird hier aufgezeichnet.</p>'}`}
-const CTL={key:v=>`Zündschlüssel Stellung ${v}`,key2:v=>`Zündschlüssel (CAN) Stellung ${v}`,ls:v=>`Lichtschalter ${['0','Standlicht','Abblendlicht'][v]}`,nebel:v=>`Nebel ${v||'aus'}`,lever:v=>`Blinkerhebel ${v<0?'links':v>0?'rechts':'Mitte'}`,fern:v=>`Fernlicht ${v?'ein':'aus'}`,hupe:v=>`Lichthupe ${v?'ein':'aus'}`,warn:v=>`Warnblinker ${v?'ein':'aus'}`,brake:v=>`Bremse ${v?'getreten':'los'}`,s2:v=>`Taster S2 ${v?'gedrückt':'los'}`,s3:v=>`Taster S3 ${v?'gedrückt':'los'}`,nt:v=>`Netzteil ${v?'ein':'aus'}`,lwr:v=>`Leuchtweitenregler ${v}`,lf:v=>`Beladung vorne ${v}`,lr:v=>`Beladung hinten ${v}`};
+const CTL={wi:v=>`Wischerschalter ${['aus','Intervall','Stufe 1','Stufe 2'][v]}`,fh:v=>`Fensterheber ${v>0?'auf':v<0?'ab':'Ruhe'}`,key:v=>`Zündschlüssel Stellung ${v}`,key2:v=>`Zündschlüssel (CAN) Stellung ${v}`,ls:v=>`Lichtschalter ${['0','Standlicht','Abblendlicht'][v]}`,nebel:v=>`Nebel ${v||'aus'}`,lever:v=>`Blinkerhebel ${v<0?'links':v>0?'rechts':'Mitte'}`,fern:v=>`Fernlicht ${v?'ein':'aus'}`,hupe:v=>`Lichthupe ${v?'ein':'aus'}`,warn:v=>`Warnblinker ${v?'ein':'aus'}`,brake:v=>`Bremse ${v?'getreten':'los'}`,s2:v=>`Taster S2 ${v?'gedrückt':'los'}`,s3:v=>`Taster S3 ${v?'gedrückt':'los'}`,nt:v=>`Netzteil ${v?'ein':'aus'}`,lwr:v=>`Leuchtweitenregler ${v}`,lf:v=>`Beladung vorne ${v}`,lr:v=>`Beladung hinten ${v}`};
 const logCtl=(k,v)=>{if(CTL[k])addLog('Geschaltet','','',CTL[k](v))};
 U.learn=store.get('learn',true);
 // =============== FEHLERSUCHE ===============
-function newFault(){st=fresh();U.fcab=toCab(MASTER);U.meas=0;U.guess=0;U.solved=false;U.fmsg=null;U.pr=null;U.pb=null;
- for(let t=0;t<40;t++){const base=FAULTS[Math.floor(Math.random()*FAULTS.length)];let f={...base};
-  if(f.cable==='rand'){const c=U.fcab[Math.floor(Math.random()*U.fcab.length)];f.cable=c.id;f.p=['cab:'+c.id];f.t+=` (${SOCK[c.a].n} ↔ ${SOCK[c.b].n})`}
-  const sym=symptoms(U.fcab,f);if(sym.length){U.fault=f;U.sym=sym;break}}
- U.mode='meas'}
+function newFault(spec){st=fresh();U.fcab=toCab(MASTER);U.meas=0;U.guess=0;U.solved=false;U.fmsg=null;U.pr=null;U.pb=null;U.acab=null;U.ft0=Date.now();
+ if(spec){const f=makeFault(spec.fi,spec.ci);U.fault=f;U.sym=symptoms(U.fcab,f);if(!U.sym.length)U.sym=['Kunde meldet einen Fehler – prüfe alle Funktionen.']}
+ else for(let t=0;t<40;t++){const fi=Math.floor(Math.random()*FAULTS.length),ci=Math.floor(Math.random()*U.fcab.length);const f=makeFault(fi,ci);const sym=symptoms(U.fcab,f);if(sym.length){U.fault=f;U.sym=sym;break}}
+ U.code=encCode(U.fault.fi,U.fault.ci);if(U.ka)kaStart();U.mode='meas'}
 function report(p){if(!p||U.solved)return;const f=U.fault;
  addLog('Fehler gemeldet',p.startsWith('cab:')?'Kabel':p.startsWith('sock:')?sn(p.slice(5)):(LAMP[p]?LAMP[p].name:p),'',f.p.includes(p)?'richtig':'falsch',f.p.includes(p)?'ok':'bad');
- if(f.p.includes(p)){U.solved=true;U.mode='meas';U.fmsg=['ok',`Richtig gefunden: ${f.t}. ${f.how} (${U.meas} Messungen)`]}
+ if(f.p.includes(p)){U.solved=true;U.mode='meas';const sc=scoreFault(),t=Math.round((Date.now()-U.ft0)/1000);const fb=store.get('fbest',[]);fb.push({s:sc,m:U.meas,t,d:Date.now()});fb.sort((a,b)=>b.s-a.s);store.set('fbest',fb.slice(0,20));U.fmsg=['ok',`Richtig gefunden: ${f.t}. ${f.how}<br><b>${sc} Punkte</b> (${U.meas} Messungen, ${t} s, ${U.guess} Fehlversuche)${fb[0]&&fb[0].s===sc?' – neue Bestleistung!':''}`];if(U.ka&&U.ka.step===2){U.ka.step=3;U.ka.msg=null}}
  else{U.guess++;U.fmsg=['bad','Das ist in Ordnung. Miss weiter – vergleiche vor und hinter dem Bauteil, Plus- und Masseseite.']}
  full()}
 
@@ -746,12 +805,14 @@ $('helpBtn').onclick=()=>{const sh=$('sheet');if(sh.classList.contains('hidden')
 // =============== BUTTONS ===============
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
  if(b.dataset.tab){U.tab=b.dataset.tab;showView();
-  if(U.tab==='fehler'){U.lock=null;if(!U.fault)newFault();U.mode='meas'}if(U.tab==='wand'){st=fresh();U.mode='plug';loadEx()}
-  if(U.tab==='quiz')renderQuiz();else if(U.tab==='aufg')renderAufg();else if(U.tab!=='wissen')full();return}
+  if(U.tab==='fehler'){U.lock=null;if(U.ka){U.ka=null;newFault()}if(!U.fault)newFault();U.mode='meas'}if(U.tab==='wand'){st=fresh();U.mode='plug';loadEx()}
+  if(U.tab==='wissen')renderRef();if(U.tab==='quiz')renderLern();else if(U.tab==='aufg')renderAufg();else if(U.tab!=='wissen')full();return}
  if(b.dataset.mode){U.mode=b.dataset.mode;U.pend=null;full();return}
  if(b.dataset.col){U.color=b.dataset.col;drawColors();return}
- if(b.dataset.set){const k=b.dataset.set,v=b.dataset.v;st[k]=['key','key2','ls','nebel','lever'].includes(k)?+v:v;logCtl(k,st[k]);full();return}
+ if(b.dataset.set){const k=b.dataset.set,v=b.dataset.v;st[k]=['key','key2','ls','nebel','lever','wi','fh'].includes(k)?+v:v;logCtl(k,st[k]);full();return}
  if(b.dataset.tog){st[b.dataset.tog]=!st[b.dataset.tog];logCtl(b.dataset.tog,st[b.dataset.tog]);full();return}
+ if(b.dataset.ka!==undefined){const i=+b.dataset.ka,k=U.ka;k.sel=k.sel.includes(i)?k.sel.filter(x=>x!==i):[...k.sel,i];drawSide();return}
+ if(b.dataset.kx!==undefined){const k=U.ka;if(k.ex[+b.dataset.kx][1]){k.step=5;k.msg=null;addLog('Kundenauftrag','','','abgeschlossen','ok')}else k.msg=['bad','Nicht gut – erkläre verständlich, ehrlich und vollständig: Was war defekt, was wurde gemacht, ist alles geprüft?'];drawSide();return}
  const a=b.dataset.act;if(!a)return;
  if(a==='reset'){st.trip=false}
  if(a==='start'){st.key=3;addLog('Geschaltet','','','Zündschlüssel Stellung 3 (Start)');setTimeout(()=>{if(st.key===3){st.key=2;full()}},1500)}
@@ -765,6 +826,12 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
  if(a==='logclear'){store.set(logKey(),[]);drawLog();return}
  if(a==='logcopy'){const L=store.get(logKey(),[]);const t=L.map(x=>[x.n,x.t,x.typ,x.von,x.nach,x.info].join('\t')).join('\n');try{navigator.clipboard.writeText('Nr\tZeit\tAktion\tVon\tNach\tErgebnis\n'+t).then(()=>{U.status='Protokoll kopiert – z. B. in Word oder Excel einfügen.';refresh()},()=>{U.status='Kopieren nicht möglich.';refresh()})}catch(e){}return}
  if(a==='newfault'){newFault()}
+ if(a==='fload'){const sp=decCode($('fcode').value);if(sp){U.ka=null;newFault(sp);U.status='Fehler aus Code geladen.'}else{U.status='Code ungültig.'}}
+ if(a==='fmk'){const fi=+$('fsel').value;U.mkcode=encCode(fi,Math.floor(Math.random()*MASTER.length))}
+ if(a==='plan'){U.showPlan=!U.showPlan;$('planBtn').classList.toggle('on',U.showPlan);drawPlan();if(U.showPlan)$('planCard').scrollIntoView({behavior:'smooth',block:'nearest'});return}
+ if(a==='ka1'){const k=U.ka;const good=k.sel.filter(i=>KAQ[i][1]).length,bad=k.sel.filter(i=>!KAQ[i][1]).length;if(good===3&&!bad){k.step=2;k.msg=null}else k.msg=['bad','Nicht ganz – sinnvoll sind Fragen, die bei der Fehlersuche helfen (seit wann, wann genau, was wurde vorher gemacht).']}
+ if(a==='ka3'){const k=U.ka;k.inv=$('kainv').value;const[pn,pp]=PART(U.fault);const g=(k.az*k.rate+pp)*1.19;const x=parseFloat(k.inv.replace(',','.'));if(Math.abs(x-g)<=0.05){k.step=4;k.msg=null}else k.msg=['bad',`Rechenweg: (${fmt(k.az,1)} h × ${k.rate} € + ${fmt(pp)} €) × 1,19 = ${fmt(g)} €`]}
+ if(a==='kanew'){kaStart();newFault()}
  if(a==='mcheck'){checkMess($('min').value);return}
  if(a==='mnew'){startMess();return}
  if(a==='maufg'){U.tab='aufg';showView();renderAufg();return}
@@ -773,7 +840,8 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
  if(a==='next'){const p=progress().find(p=>!p.done);if(p){U.hl={socks:[p.a,p.b]};focusSocks([p.a,p.b]);U.status=`Stecke: ${SOCK[p.a].n} → ${SOCK[p.b].n}`;$('sheet').classList.add('hidden')}else U.status='Alle Verbindungen der Musterlösung sind gesteckt – jetzt „Funktion prüfen“.'}
  if(a==='solution'){const pr=progress().filter(p=>!p.done);for(const p of pr){const c={id:'c'+(U.cnt++),a:p.a,b:p.b,c:autoCol(p.a,p.b)};U.cabs.push(c);U.hist.push(['add',c])}save();U.status=`${pr.length} Kabel gesteckt.`;addLog('Musterlösung','','',`${pr.length} Kabel automatisch gesteckt`)}
  full()});
-$('m1').onclick=()=>{U.mm='gnd';U.pb=null;refresh()};$('m2').onclick=()=>{U.mm='drop';U.pr=null;U.pb=null;refresh()};
+$('m1').onclick=()=>{U.mm='gnd';U.pb=null;U.mode='meas';drawColors();refresh()};$('m2').onclick=()=>{U.mm='drop';U.pr=null;U.pb=null;U.mode='meas';drawColors();refresh()};$('m3').onclick=()=>{U.mm='amp';U.mode='meas';drawColors();refresh()};$('m4').onclick=()=>{U.mm='ohm';U.pr=null;U.pb=null;U.mode='meas';drawColors();refresh()};$('m5').onclick=()=>{U.oscOn=!U.oscOn;U.osc=[];if(U.oscOn&&U.mm!=='gnd'&&U.mm!=='drop')U.mm='gnd';U.mode='meas';drawColors();refresh()};
+document.addEventListener('input',e=>{if(e.target.id==='refq')renderRef()});
 document.addEventListener('change',e=>{if(e.target.id==='exSel'){U.ex=+e.target.value;store.set('ex',U.ex);st=fresh();loadEx();full()}});
 
 // =============== QUIZ ===============
@@ -805,14 +873,14 @@ const Q=[
  ['Spannung messen: Wie schließt du das Multimeter an?',['In Reihe','Parallel','Stromlos','Über die A-Buchse'],1,'Spannung immer parallel messen.']
 ];
 let QZ=null;const best=()=>store.get('qbest',0);
-let QTOP='all';function startQuiz(){const pool=QB.map((q,i)=>i).filter(i=>QTOP==='all'||QB[i][4]===QTOP);QZ={order:pool.sort(()=>Math.random()-.5).slice(0,15),i:0,score:0,ans:null}}
-const topBar=()=>`<div class="row" style="margin-bottom:10px">${[['all','Alle'],...Object.entries(TOPIC)].map(([k,l])=>`<button data-top="${k}" class="${QTOP===k?'on':''}">${l} <span class="mut">${k==='all'?QB.length:QB.filter(q=>q[4]===k).length}</span></button>`).join('')}</div>`;
-function renderQuiz(){if(!QZ)startQuiz();const v=$('v-quiz');
+let QTOP='all';function startQuiz(){const pool=QTOP==='fk'?dueCards():QB.map((q,i)=>i).filter(i=>QTOP==='all'||QB[i][4]===QTOP);QZ={order:pool.sort(()=>Math.random()-.5).slice(0,15),i:0,score:0,ans:null}}
+const topBar=()=>QTOP==='fk'?`<p class="mut" style="margin:0 0 8px">Fehlerkartei – noch ${dueCards().length} Karten offen</p>`:`<div class="row" style="margin-bottom:10px">${[['all','Alle'],...Object.entries(TOPIC)].map(([k,l])=>`<button data-top="${k}" class="${QTOP===k?'on':''}">${l} <span class="mut">${k==='all'?QB.length:QB.filter(q=>q[4]===k).length}</span></button>`).join('')}</div>`;
+function renderQuiz(){if(!QZ)startQuiz();const v=$('lernBody');if(!v)return;
  if(QZ.i>=QZ.order.length){const s=QZ.score,n=QZ.order.length;if(s>best())store.set('qbest',s);v.innerHTML=topBar()+`<div class="card"><h2>${s} von ${n} richtig</h2><p>${s>=n*.8?'Stark – das sitzt.':s>=n*.5?'Solide. Unter „Wissen“ nachlesen.':'Noch üben – an der Wand nachbauen.'}</p><p class="mut">Bestwert ${Math.max(s,best())}/${n}</p><button class="pri" id="qagain">Neue Runde</button></div>`;return}
  const q=QB[QZ.order[QZ.i]];let h=topBar()+`<div class="card"><div class="mut">${TOPIC[q[4]]} · Frage ${QZ.i+1}/${QZ.order.length} · ${QZ.score} richtig</div><div class="bar"><i style="width:${QZ.i/QZ.order.length*100}%"></i></div><h2 style="margin:8px 0 10px">${q[0]}</h2>`;
  h+=q[1].map((o,j)=>{let c='qopt';if(QZ.ans!==null){if(j===q[2])c+=' right';else if(j===QZ.ans)c+=' wrong'}return`<button class="${c}" data-q="${j}" ${QZ.ans!==null?'disabled':''}>${o}</button>`}).join('');
  if(QZ.ans!==null)h+=`<div class="msg ${QZ.ans===q[2]?'ok':'bad'}">${QZ.ans===q[2]?'Richtig. ':'Leider falsch. '}${q[3]}</div><div class="row" style="margin-top:8px"><button class="pri" id="qnext">Weiter</button></div>`;v.innerHTML=h+'</div>'}
-$('v-quiz').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.top){QTOP=b.dataset.top;startQuiz();renderQuiz();return}if(b.dataset.q!==undefined&&QZ.ans===null){QZ.ans=+b.dataset.q;if(QZ.ans===QB[QZ.order[QZ.i]][2])QZ.score++;renderQuiz()}if(b.id==='qnext'){QZ.i++;QZ.ans=null;renderQuiz()}if(b.id==='qagain'){startQuiz();renderQuiz()}});
+$('v-quiz').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.top){QTOP=b.dataset.top;startQuiz();renderQuiz();return}if(b.dataset.q!==undefined&&QZ.ans===null){QZ.ans=+b.dataset.q;const q=QB[QZ.order[QZ.i]];const ok=QZ.ans===q[2];if(ok)QZ.score++;recQ(q,ok);renderQuiz()}if(b.id==='qnext'){QZ.i++;QZ.ans=null;renderQuiz()}if(b.id==='qagain'){startQuiz();renderLern()}});
 
 // =============== AUFGABEN-GENERATOR ===============
 const rnd=a=>a[Math.floor(Math.random()*a.length)],ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
@@ -932,8 +1000,8 @@ $('v-aufg').addEventListener('click',e=>{const b=e.target.closest('button');if(!
  if(g==='cnew'){A.calc=genCalcT(null);A.cin='';A.cres=null;renderAufg()}
  if(g==='enew'){newExam(b.dataset.et);renderAufg();window.scrollTo(0,0)}
  if(g==='eback'){A.exam=null;renderAufg()}
- if(g==='ka'){U.tab='fehler';U.lock=null;newFault();showView();full();$('v-wand').scrollIntoView({behavior:'smooth'})}
- if(g==='edone'){A.exam.done=true;A.exam.t1=Date.now();renderAufg();let p=0;A.exam.items.forEach(it=>{if(it.k==='mc'?it.ans===it.q[2]:okNum(it.ans,it.c))p+=it.k==='mc'?A.exam.wm:A.exam.wc});const h=store.get('examhist',[]);h.push({t:A.exam.t,p:Math.round(p),d:Date.now()});store.set('examhist',h.slice(-30));renderAufg();window.scrollTo(0,0)}});
+ if(g==='ka'){U.tab='fehler';U.lock=null;U.ka={};newFault();showView();full();$('v-wand').scrollIntoView({behavior:'smooth'})}
+ if(g==='edone'){A.exam.done=true;A.exam.t1=Date.now();renderAufg();let p=0;A.exam.items.forEach(it=>{if(it.k==='mc'?it.ans===it.q[2]:okNum(it.ans,it.c))p+=it.k==='mc'?A.exam.wm:A.exam.wc});A.exam.items.forEach(it=>{if(it.k==='mc')recQ(it.q,it.ans===it.q[2])});const h=store.get('examhist',[]);h.push({t:A.exam.t,p:Math.round(p),d:Date.now()});store.set('examhist',h.slice(-30));renderAufg();window.scrollTo(0,0)}});
 $('v-aufg').addEventListener('input',e=>{if(e.target.dataset.ei!==undefined)A.exam.items[+e.target.dataset.ei].ans=e.target.value;if(e.target.id==='cin')A.cin=e.target.value});
 function showView(){const w=U.tab==='wand'||U.tab==='fehler'||U.tab==='mess';$('v-wand').classList.toggle('hidden',!w);$('v-quiz').classList.toggle('hidden',U.tab!=='quiz');$('v-wissen').classList.toggle('hidden',U.tab!=='wissen');$('v-aufg').classList.toggle('hidden',U.tab!=='aufg');
  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x.dataset.tab===(U.tab==='mess'?'aufg':U.tab)));if(w)setTimeout(fit,0)}
@@ -1018,6 +1086,104 @@ const FACH=[
  ['Welche Sicherheitsregeln gelten vor Arbeiten an HV-Fahrzeugen?','Nur mit Qualifikation. Fahrzeug durch fachkundige Person freischalten, gegen Wiedereinschalten sichern, Spannungsfreiheit feststellen, kennzeichnen.'],
  ['Warum klemmst du die Batterie Minus zuerst ab?','Rutscht das Werkzeug an die Karosserie, entsteht kein Kurzschluss, weil die Karosserie auf Minus liegt und der Minus schon getrennt ist.']];
 
+// =============== MESSGERÄT: A, Ω, OSZI ===============
+U.osc=[];U.oscOn=false;U.acab=null;
+function ohm(a,b){const s2={...st,nt:false,trip:false,rel:{}};const r=simulate(s2,cab(),curF(),false,{inj:[a,b]});return(r.v(a)-r.v(b))/0.001}
+function netType(id){if(!R||!id)return'';const sm=R.same;if(sm(id,'CS.H1')||sm(id,'CB.H'))return'canh';if(sm(id,'CS.L1')||sm(id,'CB.L'))return'canl';if(sm(id,'LV.LIN'))return'lin';return''}
+function drawOsc(){const el=$('osc');if(!el)return;if(!U.oscOn){el.innerHTML='';el.style.display='none';return}el.style.display='block';const W=300,H=110;let s=`<rect width="${W}" height="${H}" rx="8" fill="#0d1a12"/>`;for(let i=1;i<6;i++)s+=`<line x1="${i*W/6}" y1="0" x2="${i*W/6}" y2="${H}" stroke="#1f3a28"/>`;for(let i=1;i<4;i++)s+=`<line x1="0" y1="${i*H/4}" x2="${W}" y2="${i*H/4}" stroke="#1f3a28"/>`;
+ const nt=netType(U.pr);let lab='';
+ if((nt==='canh'||nt==='canl')&&R.busOK){const bits=[1,0,1,1,0,0,1,0,1,0,0,1,1,0,1,0,1,1,0,1,0,0,1,0];const y=v=>H-8-v/5*(H-16);let ph='',pl='';bits.forEach((b,i)=>{const x0=i*W/bits.length,x1=(i+1)*W/bits.length,vh=b?3.5:2.5,vl=b?1.5:2.5;ph+=`${i?'L':'M'}${x0} ${y(vh)} L${x1} ${y(vh)} `;pl+=`${i?'L':'M'}${x0} ${y(vl)} L${x1} ${y(vl)} `});
+  s+=`<path d="${ph}" fill="none" stroke="#ffd84a" stroke-width="2"/><path d="${pl}" fill="none" stroke="#5ab0ff" stroke-width="2"/>`;lab='CAN-H (gelb) / CAN-L (blau) · 1 V/Div · Zeitbasis ca. 5 µs – schematisch'}
+ else if(nt==='lin'&&R.lv){const bits=[1,1,0,0,0,1,0,1,1,0,1,0,0,1,1,1,0,1,0,1];const y=v=>H-8-v/15*(H-16);let p='';bits.forEach((b,i)=>{const x0=i*W/bits.length,x1=(i+1)*W/bits.length,v=b?11:0.6;p+=`${i?'L':'M'}${x0} ${y(v)} L${x1} ${y(v)} `});s+=`<path d="${p}" fill="none" stroke="#3ee07a" stroke-width="2"/>`;lab='LIN · 5 V/Div · Zeitbasis ca. 50 µs – schematisch'}
+ else{const d=U.osc,mx=15;const y=v=>H-8-Math.max(-1,Math.min(mx,v))/mx*(H-16);if(d.length>1)s+=`<polyline points="${d.map((v,i)=>`${i*W/79},${y(v)}`).join(' ')}" fill="none" stroke="#3ee07a" stroke-width="2"/>`;lab=U.pr?'Spannung über Zeit · 3 V/Div · 1 s/Div':'Messpunkt antippen'}
+ el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${s}</svg><div class="pl">${lab}</div>`}
+// =============== NETZPLAN ===============
+U.showPlan=false;
+function drawPlan(){const el=$('planCard');if(!U.showPlan){el.classList.add('hidden');return}el.classList.remove('hidden');
+ const uf=connectedSet();const nets=new Map();for(const id in SOCK){const r=uf.f(id);if(!nets.has(r))nets.set(r,[]);nets.get(r).push(id)}
+ const used=new Set(cab().flatMap(c=>[c.a,c.b]));const list=[...nets.values()].filter(ids=>ids.some(i=>used.has(i)));
+ const kind=ids=>{const r=uf.f(ids[0]);if(r===uf.f('R30'))return['Kl. 30','#d62b2b'];if(r===uf.f('R15'))return['Kl. 15','#222'];if(r===uf.f('GND'))return['Masse 31','#7a4424'];return['Leitung','#6b7280']};
+ let h=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h3 style="margin:0">Verbindungsplan</h3><button data-act="plan">Schließen</button></div><p class="mut" style="margin:4px 0 8px">Alle Punkte, die durch deine Kabel und die festen Schienen leitend verbunden sind (gleiches Potenzial). Spannung = aktuelle Messung gegen Masse.</p>`;
+ list.sort((a,b)=>R.v(b[0])-R.v(a[0])).forEach((ids,i)=>{const[k,c]=kind(ids);const shown=ids.filter(x=>used.has(x)||!SOCK[x].rail).slice(0,14);h+=`<div style="border-left:6px solid ${c};padding:6px 10px;margin:6px 0;background:color-mix(in srgb,${c} 8%,transparent);border-radius:6px"><b>${k==='Leitung'?'Leitung '+(i+1):k}</b> <span class="mut">· ${fmt(R.v(ids[0]))} V</span><div style="font-size:14px">${shown.map(x=>esc(sn(x))).join(' • ')}${ids.length>shown.length?` <span class="mut">+ ${ids.length-shown.length} Schienenbuchsen</span>`:''}</div></div>`});
+ if(!list.length)h+='<p class="mut">Noch keine Kabel gesteckt.</p>';
+ const act=[...LAMPS.filter(l=>R.br[l.id]>0.05).map(l=>l.name),...LOADS.filter(l=>Math.abs(R.ld[l.id]||0)>9).map(l=>l.name)];h+=`<p style="margin:8px 0 0"><b>Gerade aktiv:</b> ${act.length?act.join(', '):'nichts'}</p>`;
+ el.innerHTML=h}
+// =============== FEHLER-CODES / CHALLENGE / KUNDENAUFTRAG ===============
+const encCode=(fi,ci)=>'LW-'+(fi*1000+ci+12345).toString(36).toUpperCase();
+const decCode=c=>{const n=parseInt(String(c).toUpperCase().replace(/^LW-?/,''),36)-12345;if(isNaN(n)||n<0)return null;const fi=Math.floor(n/1000),ci=n%1000;return FAULTS[fi]?{fi,ci}:null};
+function makeFault(fi,ci){const base=FAULTS[fi];const f={...base,fi,ci:0};if(f.cable==='rand'){const c=U.fcab[ci%U.fcab.length];f.cable=c.id;f.ci=ci%U.fcab.length;f.p=['cab:'+c.id];f.t+=` (${SOCK[c.a].n} ↔ ${SOCK[c.b].n})`}return f}
+const KAQ=[['Seit wann tritt der Fehler auf?',1],['Tritt er immer auf oder nur manchmal (z. B. bei Nässe oder Kälte)?',1],['Wurde vorher etwas repariert oder nachgerüstet?',1],['Welche Farbe hat Ihr Lieblingsauto?',0],['Wie viel verdienen Sie im Monat?',0],['Fahren Sie gern schnell?',0]];
+const PART=f=>f.lamp?['Glühlampe/Leuchtmittel',f.lamp.includes('58')?24.9:8.5]:f.cable?['Leitungsreparatur (Material)',6.0]:/RE_K3/.test(f.k)?['Blinkgeber',24.9]:/RE_K/.test(f.k)?['Relais',18.9]:/SE_|ZS_/.test(f.k)?['Schalter',34.5]:/_X/.test(f.k)?['Xenon-Steuergerät',289]:/gnd/.test(f.k)?['Massepunkt reinigen (Kleinmaterial)',3.5]:['Ersatzteil',20];
+function kaStart(){U.ka={step:1,sel:[],msg:null,az:rnd([0.5,0.8,1.0]),rate:rnd([92,98,105]),inv:'',ex:null}}
+function kaHtml(){const k=U.ka;if(!k)return'';let h='';
+ if(k.step===1){h=`<h3>Kundenauftrag · 1. Auftragsannahme</h3><p style="margin:0 0 6px">Der Kunde schildert: <b>„${U.sym.join(' ')}“</b> Welche Fragen stellst du ihm? Wähle die 3 sinnvollen.</p>${KAQ.map(([q],i)=>`<button class="qopt ${k.sel.includes(i)?'on':''}" data-ka="${i}">${q}</button>`).join('')}<div class="row" style="margin-top:6px"><button class="pri" data-act="ka1">Weiter</button></div>${k.msg?`<div class="msg ${k.msg[0]}">${k.msg[1]}</div>`:''}`}
+ else if(k.step===2)h=`<h3>Kundenauftrag · 2. Fehlersuche</h3><p style="margin:0">Beanstandung: ${U.sym.join('; ')}. Stell den Fehler nach, miss dich hin und melde ihn („Fehler melden“).</p>`;
+ else if(k.step===3){const[pn,pp]=PART(U.fault);const net=k.az*k.rate+pp;h=`<h3>Kundenauftrag · 3. Rechnung</h3><p style="margin:0 0 6px">Arbeitszeit ${fmt(k.az,1)} h zu ${k.rate} € netto, Teil: ${pn} ${fmt(pp)} € netto. Wie hoch ist der Rechnungsbetrag <b>brutto</b> (19 % MwSt)?</p><div class="row"><input id="kainv" inputmode="decimal" value="${esc(k.inv)}" style="font:600 18px system-ui,sans-serif;min-height:44px;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:140px"><span style="align-self:center;font-weight:700">€</span><button class="pri" data-act="ka3">Prüfen</button></div>${k.msg?`<div class="msg ${k.msg[0]}">${k.msg[1]}</div>`:''}`}
+ else if(k.step===4){const opts=k.ex||(k.ex=[[`Bei Ihrem Fahrzeug war ein Fehler in der Beleuchtung: ${U.fault.t}. Wir haben ihn gefunden, instand gesetzt und alle Funktionen geprüft – alles funktioniert wieder.`,1],['Da war was kaputt, jetzt geht’s wieder.',0],['Der Spannungsfall gegen Klemme 31 lag über dem Sollwert, deshalb war die Potenzialdifferenz falsch.',0],['Wir haben sicherheitshalber alle Lampen getauscht.',0]].sort(()=>Math.random()-.5));
+  h=`<h3>Kundenauftrag · 4. Übergabe</h3><p style="margin:0 0 6px">Wie erklärst du dem Kunden die Reparatur?</p>${opts.map(([t],i)=>`<button class="qopt" data-kx="${i}">${t}</button>`).join('')}${k.msg?`<div class="msg ${k.msg[0]}">${k.msg[1]}</div>`:''}`}
+ else h=`<h3>Kundenauftrag abgeschlossen</h3><p style="margin:0">Annahme, Fehlersuche, Rechnung und Übergabe erledigt – genau so läuft der Kundenauftrag in Teil 2. Zeit: ${Math.round((Date.now()-U.ft0)/60000)} min.</p><div class="row" style="margin-top:8px"><button class="pri" data-act="kanew">Neuer Kundenauftrag</button></div>`;
+ return h}
+function fTimer(){const e=$('ftimer');if(e&&U.ft0&&!U.solved){const t=Math.floor((Date.now()-U.ft0)/1000);e.textContent=`${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`}}
+function scoreFault(){const t=(Date.now()-U.ft0)/1000;return Math.max(0,Math.round(1000-U.meas*15-t*1.5-U.guess*120))}
+// =============== STATISTIK / FEHLERKARTEI ===============
+const qkey=q=>q[0].slice(0,60);
+function recQ(q,ok){const S_=store.get('qs',{});const k=qkey(q);const e=S_[k]||{n:0,c:0,s:0,w:0};e.n++;if(ok){e.c++;e.s++}else{e.w++;e.s=0}S_[k]=e;store.set('qs',S_)}
+const dueCards=()=>{const S_=store.get('qs',{});return QB.map((q,i)=>i).filter(i=>{const e=S_[qkey(QB[i])];return e&&e.w>0&&e.s<3})};
+function topicStats(){const S_=store.get('qs',{});const out={};for(const t in TOPIC)out[t]={n:0,c:0,pool:0};for(const q of QB){const t=q[4];out[t].pool++;const e=S_[qkey(q)];if(e){out[t].n+=e.n;out[t].c+=e.c}}return out}
+function weakest(){const ts=topicStats();return Object.entries(ts).sort((a,b)=>((a[1].n?a[1].c/a[1].n:0.5)-(b[1].n?b[1].c/b[1].n:0.5))||(a[1].n-b[1].n)).map(x=>x[0])}
+// =============== OFFENE FRAGEN ===============
+const OPEN=[...FACH,
+ ['Erkläre den Unterschied zwischen Reihen- und Parallelschaltung von Lampen im Kfz.','Parallel: jede Lampe bekommt volle Bordspannung, fällt eine aus, leuchten die anderen weiter. Reihe: Spannung teilt sich auf, Lampen leuchten schwach, fällt eine aus, gehen alle aus. Im Kfz wird parallel geschaltet.'],
+ ['Wie prüfst du eine Sicherung richtig?','Nicht nur anschauen: unter Spannung beidseitig gegen Masse messen – vorne und hinten muss die gleiche Spannung sein. Oder ausgebaut auf Durchgang prüfen.'],
+ ['Warum blinkt ein Blinker doppelt so schnell?','Der Blinkgeber erkennt am geringeren Strom, dass eine Lampe fehlt (Lampenausfallkontrolle), und taktet schneller als Warnung.'],
+ ['Was passiert bei einem Masseschluss im Pluszweig?','Der Strom fließt ohne Verbraucher direkt nach Masse – sehr hoher Strom, die Sicherung löst aus. Ohne Sicherung Kabelbrand.'],
+ ['Erkläre die Aufgabe von CAN-High und CAN-Low.','Zwei verdrillte Leitungen, Information steckt in der Differenzspannung. Dominant: H ca. 3,5 V, L ca. 1,5 V. Rezessiv: beide ca. 2,5 V. Störsicher, weil Störungen beide Leitungen gleich treffen.'],
+ ['Wie funktioniert ein Fensterheber-Schalter mit Polwendung?','Der Schalter legt bei „Auf“ M1 auf Plus und M2 auf Masse, bei „Ab“ umgekehrt. Der Gleichstrommotor dreht dadurch andersherum. In Ruhe liegen beide auf Masse – der Motor ist gebremst.'],
+ ['Was ist der Unterschied zwischen Ottomotor und Dieselmotor bei der Zündung?','Otto: Fremdzündung durch Zündkerze, Gemisch wird verdichtet. Diesel: Selbstzündung – nur Luft wird hoch verdichtet und heiß, der eingespritzte Kraftstoff entzündet sich selbst.'],
+ ['Warum werden Bremsen achsweise erneuert?','Damit die Bremswirkung links und rechts gleich ist. Sonst zieht das Fahrzeug beim Bremsen zur Seite.'],
+ ['Was gehört zu einer ordentlichen Fahrzeugannahme?','Kundenbeanstandung genau aufnehmen und nachfragen, Fahrzeug auf Vorschäden prüfen, Kilometerstand, Auftrag schriftlich mit Kostenrahmen unterschreiben lassen.']];
+// =============== LERNEN-TAB ===============
+const L_={sub:'quiz',oi:0,show:false};
+function renderLern(){const v=$('v-quiz');const sb=[['quiz','Quiz'],['fk',`Fehlerkartei (${dueCards().length})`],['open','Offene Fragen'],['stat','Statistik'],['plan','Lernplan']];
+ v.innerHTML=`<div class="seg" style="margin-bottom:12px;overflow-x:auto">${sb.map(([k,l])=>`<button data-ls="${k}" class="${L_.sub===k?'on':''}" style="white-space:nowrap">${l}</button>`).join('')}</div><div id="lernBody"></div>`;
+ const b=$('lernBody');
+ if(L_.sub==='quiz'){if(QTOP==='fk')QTOP='all';renderQuiz()}
+ else if(L_.sub==='fk'){const d=dueCards();if(QTOP==='fk'&&QZ&&QZ.i<QZ.order.length){renderQuiz();return}
+  b.innerHTML=`<div class="card"><h3>Fehlerkartei</h3><p style="margin:0">Jede Frage, die du falsch beantwortest, landet hier. Erst wenn du sie <b>3-mal hintereinander richtig</b> hast, verschwindet sie.</p><p style="font-size:22px;font-weight:700;margin:10px 0">${d.length} Karten offen</p>${d.length?`<button class="pri" data-ls2="fkgo">Karten üben</button>`:'<p class="mut">Super – keine offenen Karten. Mach ein Quiz oder eine Prüfung, um neue zu sammeln.</p>'}</div>`}
+ else if(L_.sub==='open'){const q=OPEN[L_.oi%OPEN.length];const os=store.get('open',{});b.innerHTML=`<div class="card"><div class="mut">Frage ${L_.oi%OPEN.length+1} von ${OPEN.length} · offene Frage wie im Fachgespräch</div><h2 style="margin:8px 0 10px">${q[0]}</h2><textarea id="oans" rows="5" placeholder="Deine Antwort in eigenen Worten …" style="width:100%;font:16px system-ui,sans-serif;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)"></textarea>
+  <div class="row" style="margin-top:8px"><button class="pri" data-ls2="oshow">Musterantwort zeigen</button><button data-ls2="onext">Nächste Frage</button></div>${L_.show?`<div class="msg info"><b>Musterantwort:</b> ${q[1]}</div><p class="mut" style="margin:8px 0 4px">Wie gut war deine Antwort?</p><div class="row"><button data-or="2">Gewusst</button><button data-or="1">Teilweise</button><button data-or="0">Nicht gewusst</button></div>`:''}<p class="mut" style="margin-top:8px">Bisher bewertet: ${Object.keys(os).length} von ${OPEN.length}</p></div>`}
+ else if(L_.sub==='stat'){const ts=topicStats(),hist=store.get('examhist',[]),fb=store.get('fbest',[]);let n=0,c=0;for(const t in ts){n+=ts[t].n;c+=ts[t].c}
+  b.innerHTML=`<div class="card"><h3>Gesamt</h3><p style="font-size:22px;font-weight:700;margin:0">${n?Math.round(c/n*100):0} % richtig <span class="mut" style="font-size:15px;font-weight:400">· ${n} beantwortete Fragen · ${dueCards().length} Karten in der Fehlerkartei</span></p></div>
+  <div class="card"><h3>Nach Thema</h3>${Object.entries(ts).map(([t,x])=>{const p=x.n?Math.round(x.c/x.n*100):0;const col=!x.n?'var(--line)':p>=80?'var(--ok)':p>=50?'var(--acc)':'var(--bad)';return`<div style="margin:8px 0"><div style="display:flex;justify-content:space-between;font-size:15px"><b>${TOPIC[t]}</b><span class="mut">${x.n?p+' %':'noch nicht geübt'} · ${x.n} Antworten</span></div><div class="prog" style="margin:4px 0"><i style="width:${x.n?p:0}%;background:${col}"></i></div></div>`}).join('')}<p class="mut">Schwächstes Thema: <b>${TOPIC[weakest()[0]]}</b></p></div>
+  <div class="card"><h3>Prüfungsbögen</h3>${hist.length?hist.slice(-10).map(x=>`<div style="display:flex;gap:8px;align-items:center;margin:5px 0"><span style="width:110px;font-size:13px">${new Date(x.d).toLocaleDateString('de-DE')} ${EXT[x.t]?EXT[x.t].n.replace('Gesellenprüfung ','').replace('Teil 2 · ','T2 '):''}</span><div class="prog" style="flex:1;margin:0"><i style="width:${x.p}%;background:${x.p>=50?'var(--ok)':'var(--bad)'}"></i></div><b style="width:52px;text-align:right">${x.p} P</b></div>`).join(''):'<p class="mut">Noch keine Prüfung geschrieben.</p>'}</div>
+  <div class="card"><h3>Fehlersuche-Challenge</h3>${fb.length?fb.slice(0,5).map((x,i)=>`<div>${i+1}. <b>${x.s} Punkte</b> <span class="mut">· ${x.m} Messungen · ${x.t} s · ${new Date(x.d).toLocaleDateString('de-DE')}</span></div>`).join(''):'<p class="mut">Noch keine Fehlersuche gelöst.</p>'}</div>
+  <div class="row"><button data-ls2="statreset">Statistik zurücksetzen</button></div>`}
+ else if(L_.sub==='plan'){const d=store.get('exdate','');const days=d?Math.ceil((new Date(d)-new Date(new Date().toDateString()))/864e5):null;const today=new Date().toISOString().slice(0,10);const done=store.get('plan.'+today,[]);const w=weakest();const dc=dueCards().length;const wd=new Date().getDay();
+  const tasks=[[`15 Quizfragen zum Thema ${TOPIC[w[0]]} (dein schwächstes)`,'quiz:'+w[0]],[dc?`Fehlerkartei abarbeiten (${dc} Karten)`:`15 Quizfragen zum Thema ${TOPIC[w[1]]}`,dc?'fk':'quiz:'+w[1]],[wd%2?'1 Verdrahtungsauftrag an der Lernwand':'1 Fehlersuche an der Lernwand','go:'+(wd%2?'wire':'fehler')],[wd%3===0?'3 offene Fragen (Fachgespräch) beantworten':'5 Rechenaufgaben','go:'+(wd%3===0?'open':'calc')]];
+  if(days!==null&&days<=21)tasks.push([`Prüfungsbogen schreiben: ${['Teil 2 · Kfz- und Instandhaltungstechnik','Teil 2 · Diagnosetechnik','Teil 2 · WiSo','Gesellenprüfung Teil 1'][wd%4]}`,'go:exam']);
+  b.innerHTML=`<div class="card"><h3>Prüfungsdatum</h3><div class="row"><input type="date" id="exdate" value="${d}" style="font:600 16px system-ui,sans-serif;min-height:44px;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)"><button data-ls2="savedate">Speichern</button></div>${days!==null?`<p style="font-size:22px;font-weight:700;margin:10px 0 0">${days>0?`Noch ${days} Tage`:days===0?'Heute ist Prüfung – viel Erfolg!':'Prüfung vorbei'}</p>`:'<p class="mut">Trag dein Prüfungsdatum ein, dann wird der Plan dichter, je näher sie kommt.</p>'}</div>
+  <div class="card"><h3>Plan für heute</h3><p class="mut" style="margin:0 0 6px">Richtet sich nach deinen schwächsten Themen und der Fehlerkartei.</p>${tasks.map(([t,g],i)=>`<div style="display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)"><button data-pd="${i}" style="min-width:44px" class="${done.includes(i)?'on':''}">${done.includes(i)?'✓':''}</button><span style="flex:1">${t}</span><button data-pgo="${g}">Los</button></div>`).join('')}<p class="mut" style="margin-top:8px">${done.length} von ${tasks.length} erledigt</p></div>`}}
+$('v-quiz').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.ls){L_.sub=b.dataset.ls;if(L_.sub==='quiz'){QTOP='all';startQuiz()}renderLern();return}
+ const g=b.dataset.ls2;
+ if(g==='fkgo'){QTOP='fk';startQuiz();renderLern()}
+ if(g==='oshow'){L_.show=true;renderLern()}
+ if(g==='onext'){L_.oi++;L_.show=false;renderLern()}
+ if(g==='statreset'){store.set('qs',{});store.set('examhist',[]);store.set('fbest',[]);store.set('open',{});renderLern()}
+ if(g==='savedate'){store.set('exdate',$('exdate').value);renderLern()}
+ if(b.dataset.or!==undefined){const os=store.get('open',{});os[L_.oi%OPEN.length]=+b.dataset.or;store.set('open',os);L_.oi++;L_.show=false;renderLern()}
+ if(b.dataset.pd!==undefined){const today=new Date().toISOString().slice(0,10);const d=store.get('plan.'+today,[]);const i=+b.dataset.pd;store.set('plan.'+today,d.includes(i)?d.filter(x=>x!==i):[...d,i]);renderLern()}
+ if(b.dataset.pgo){const[a,x]=b.dataset.pgo.split(':');if(a==='quiz'){L_.sub='quiz';QTOP=x;startQuiz();renderLern()}else if(a==='fk'){L_.sub='fk';QTOP='fk';startQuiz();renderLern()}else if(x==='open'){L_.sub='open';renderLern()}else if(x==='fehler'){U.tab='fehler';U.ka=null;newFault();showView();full()}else{U.tab='aufg';A.sub=x==='exam'?'exam':x;showView();renderAufg()}window.scrollTo(0,0)}});
+// =============== WERTE NACHSCHLAGEN ===============
+const REF=[['Klemme 30','Dauerplus von der Batterie'],['Klemme 15','Zündungsplus'],['Klemme 31','Masse'],['Klemme 50','Starter'],['Klemme 75','Entlastung, beim Starten aus'],['Klemme 58','Stand-/Rücklicht'],['Klemme 56 / 56a / 56b','Scheinwerfer / Fernlicht / Abblendlicht'],['Klemme 54','Bremslicht'],['Klemme 49 / 49a','Blinkgeber Eingang / Ausgang'],['Klemme 53 / 53b','Wischermotor Stufe 1 / Stufe 2'],['Klemme 85 / 86','Relaisspule Minus / Plus'],['Klemme 87 / 87a','Relais Arbeits- / Ruhekontakt'],['Klemme D+','Lichtmaschine Erregung / Ladekontrolle'],
+ ['Sicherung 5 A','hellbraun'],['Sicherung 7,5 A','braun'],['Sicherung 10 A','rot'],['Sicherung 15 A','blau'],['Sicherung 20 A','gelb'],['Sicherung 25 A','weiß/natur'],['Sicherung 30 A','grün'],
+ ['Batterie voll in Ruhe','ca. 12,6–12,7 V'],['Ladespannung','ca. 13,8–14,8 V'],['Ruhestrom','einige 10 mA (grob 20–50 mA)'],['CAN-H / CAN-L rezessiv','ca. 2,5 V / 2,5 V'],['CAN-H / CAN-L dominant','ca. 3,5 V / 1,5 V'],['CAN Widerstand H–L stromlos','ca. 60 Ω (2 × 120 Ω parallel)'],['Hochvolt','über 60 V DC bzw. 30 V AC'],
+ ['Mindestprofiltiefe Pkw','1,6 mm (gesetzlich)'],['Geschwindigkeitsindex T / H / V / W / Y','190 / 210 / 240 / 270 / 300 km/h'],['Lastindex 88 / 91 / 94','560 / 615 / 670 kg je Reifen'],['Reifen 205/55 R16 91V','Breite 205 mm, Querschnitt 55 %, Radial, 16 Zoll, LI 91, bis 240 km/h'],['DOT 2423','hergestellt KW 24 im Jahr 2023'],
+ ['Lambda λ = 1','stöchiometrisch, Benzin ca. 14,7 kg Luft : 1 kg Kraftstoff'],['Radschrauben Pkw','typisch ca. 110–140 Nm – immer Herstellerangabe!'],['Bremsflüssigkeit','hygroskopisch, Wechsel nach Herstellervorgabe (oft alle 2 Jahre)'],
+ ['Ohmsches Gesetz','U = R · I'],['Leistung','P = U · I = U² / R'],['Leitungswiderstand','R = ρ · l / A (Kupfer ρ = 0,0178 Ω·mm²/m)'],['Hubraum','V_h = π/4 · d² · s'],['Verdichtung','ε = (V_h + V_c) / V_c'],['Motorleistung','P [kW] = M [Nm] · n [1/min] / 9550'],['Übersetzung','i = z2 / z1 = n1 / n2'],
+ ['Brandklassen','A fest, B flüssig, C Gase, D Metalle, F Speisefette'],['Probezeit Ausbildung','1 bis 4 Monate'],['Mindesturlaub','24 Werktage (6-Tage-Woche)'],['IHK/HWK-Notenschlüssel','92 / 81 / 67 / 50 / 30 Punkte = 1 / 2 / 3 / 4 / 5']];
+function renderRef(){const q=($('refq')||{}).value||'';const f=REF.filter(([a,b])=>(a+' '+b).toLowerCase().includes(q.toLowerCase()));$('refList').innerHTML=f.length?`<table><tbody>${f.map(([a,b])=>`<tr><td style="font-weight:600;width:42%">${a}</td><td>${b}</td></tr>`).join('')}</tbody></table>`:'<p class="mut">Nichts gefunden.</p>'}
+
 // =============== START ===============
 let statSvg=`<rect x="-400" y="-400" width="${WALLW+800}" height="${WALLH+800}" fill="#b9bdc2"/>`;
 for(const r of ROWS)statSvg+=`<rect x="-20" y="${r.y+r.h}" width="${WALLW+40}" height="20" fill="#d8dbde"/><rect x="-20" y="${r.y+r.h+3}" width="${WALLW+40}" height="3" fill="#aeb2b6"/>`;
@@ -1025,11 +1191,16 @@ statSvg+=MODS.map(modStatic).join('')+Object.values(SOCK).map(sockSvg).join('');
 $('stat').innerHTML=statSvg;
 loadEx();
 const tick=()=>{U.t+=0.1;const per=R&&R.fast?0.34:0.67,ph=(U.t%per)<per/2;let ch=ph!==U.fl;U.fl=ph;
+ const wp=(U.t%4)<1.1;if(wp!==st.wiPh){st.wiPh=wp;if(st.wi===1)ch=true}
+ if(R&&R.ld){const m=R.ld['FH:M']||0;if(Math.abs(m)>6){const nw=Math.max(0,Math.min(100,st.win+Math.sign(m)*2.5));if(nw!==st.win){st.win=nw;ch=true}}}
+ if(U.oscOn&&U.pr&&(U.mm==='gnd'||U.mm==='drop')&&R){U.osc.push(R.v(U.pr)-(U.mm==='drop'&&U.pb?R.v(U.pb):0));if(U.osc.length>80)U.osc.shift();if(!ch)drawOsc()}
+ fTimer();
  for(const m of['XL','XR']){const pw=R&&R.v(m+'.56b')>9;const nx=pw?Math.min(1,st.xen[m]+0.12):0;if(nx!==st.xen[m]){st.xen[m]=nx;ch=true}
   const tgt=R&&R.lin[m].pow&&R.lin[m].link?-(st.lr-st.lf)*1.2:(R&&R.lin[m].pow?st.ang[m]:st.ang[m]);if(Math.abs(tgt-st.ang[m])>0.01){st.ang[m]+=Math.sign(tgt-st.ang[m])*Math.min(0.3,Math.abs(tgt-st.ang[m]));ch=true}}
  if(ch&&(U.tab==='wand'||U.tab==='fehler'||U.tab==='mess')){refresh()}};
 requestAnimationFrame(()=>{fit();full();setInterval(tick,100)});
-window.addEventListener('resize',()=>{});
+let lastW=0;window.addEventListener('resize',()=>{const r=svg.getBoundingClientRect();if(!r.width||!r.height)return;const cx=VB.x+VB.w/2,cy=VB.y+VB.h/2;VB.h=VB.w*r.height/r.width;VB.y=cy-VB.h/2;setVB()});
+try{if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)&&!/claude|anthropic/.test(location.hostname))navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
 }
 </script>
 </body>
